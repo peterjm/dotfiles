@@ -1,0 +1,20 @@
+[alias]
+  stats = status
+  st = status
+  ci = commit
+  br = branch
+  co = checkout
+  df = diff
+  lg = log -p
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  type = cat-file -t
+  dump = cat-file -p
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+[core]
+  editor = "vim -f"
+  excludesfile = /Users/peterjm/.gitignore
+[apply]
+  whitespace = strip
