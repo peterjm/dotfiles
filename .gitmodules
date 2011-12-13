@@ -1,5 +1,5 @@
-[submodule "vim/autoload/pathogen"]
-	path = vim/autoload/pathogen
+[submodule "vim/extras/pathogen"]
+	path = vim/extras/pathogen
 	url = https://github.com/tpope/vim-pathogen.git
 [submodule "vim/bundle/ack"]
 	path = vim/bundle/ack
