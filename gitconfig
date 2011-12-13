@@ -15,6 +15,6 @@
   branch = auto
 [core]
   editor = "vim -f"
-  excludesfile = /Users/peterjm/.gitignore
+  excludesfile = ~/.gitignore
 [apply]
   whitespace = strip
