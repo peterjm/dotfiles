@@ -10,3 +10,6 @@
 [submodule "vim/bundle/gitignore"]
 	path = vim/bundle/gitignore
 	url = https://github.com/sebastiangeiger/gitignore.vim
+[submodule "vim/extras/vividchalk"]
+	path = vim/extras/vividchalk
+	url = https://github.com/tpope/vim-vividchalk.git
