@@ -5,7 +5,7 @@ task :update do
 end
 
 task :link do
-  %w[ackrc bashrc gemrc gitconfig gitignore gvimrc vimrc vim].each do |file|
+  %w[ackrc bash_profile bashrc gemrc gitconfig gitignore gvimrc vimrc vim].each do |file|
     dotfile = File.join(ENV['HOME'], ".#{file}")
     if File.exist? dotfile
       warn "~/.#{file} already exists"
