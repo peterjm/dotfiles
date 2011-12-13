@@ -17,6 +17,9 @@ export VISUAL EDITOR GIT_EDITOR PATH LSCOLORS
 
 export DYLD_LIBRARY_PATH=/usr/local/mysql/lib/:
 
+### additional functions stored here to keep .bashrc clean
+[ ! -f "$HOME/.bashrc.extras" ] || . "$HOME/.bashrc.extras"
+
 ### prompt
 # If I am root, set the prompt to bright red
 if [ ${UID} -eq 0 ]; then PROMPT_COLOUR='31m' ; else PROMPT_COLOUR='33m' ; fi
