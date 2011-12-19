@@ -40,6 +40,8 @@ autocmd BufRead,BufNewFile *.god setf ruby
 autocmd FileType make set noexpandtab
 autocmd FileType python set noexpandtab
 
+autocmd FileType ruby autocmd BufWritePre <buffer> :%s/\s\+$//e " clear trailing whitespace in ruby files
+
 " Remember last location in file, but not for commit messages. (see :help last-position-jump)
 autocmd BufReadPost * if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$")
   \| exe "normal! g`\"" | endif
