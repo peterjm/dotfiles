@@ -13,3 +13,6 @@
 [submodule "vim/extras/vividchalk"]
 	path = vim/extras/vividchalk
 	url = https://github.com/tpope/vim-vividchalk.git
+[submodule "vim/bundle/rails"]
+	path = vim/bundle/rails
+	url = git://github.com/tpope/vim-rails.git
