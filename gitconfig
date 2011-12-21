@@ -14,7 +14,6 @@
   status = auto
   branch = auto
 [core]
-  editor = "vim -f"
   excludesfile = ~/.gitignore
 [apply]
   whitespace = strip

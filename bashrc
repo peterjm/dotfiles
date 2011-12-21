@@ -9,8 +9,8 @@ alias rspec="bundle exec rspec"
 alias top="top -o cpu"
 
 ### environment variables
-VISUAL=mvim
-EDITOR="$VISUAL"
+EDITOR="vim -f"
+VISUAL="$EDITOR"
 PATH="$PATH:/usr/local/mysql/bin"
 LSCOLORS=gxgxcxdxbxegedabagacad
 export VISUAL EDITOR GIT_EDITOR PATH LSCOLORS
