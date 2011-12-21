@@ -54,3 +54,4 @@ call pathogen#infect()          " loads all plugins
 call pathogen#helptags()        " generates the helptags
 
 let g:CommandTMaxHeight=20
+map :ctf :CommandTFlush
