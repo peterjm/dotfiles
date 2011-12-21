@@ -34,18 +34,20 @@ set incsearch                   " incremental searching
 set ignorecase                  " searches are case insensitive...
 set smartcase                   " ... unless they contain at least one capital letter
 
-"" Filetypes
-autocmd BufRead,BufNewFile *.rabl setf ruby
-autocmd BufRead,BufNewFile *.god setf ruby
-" File types that require tabs, not spaces
-autocmd FileType make set noexpandtab
-autocmd FileType python set noexpandtab
+if has("autocmd")
+  "" Filetypes
+  autocmd BufRead,BufNewFile *.rabl setf ruby
+  autocmd BufRead,BufNewFile *.god setf ruby
+  " File types that require tabs, not spaces
+  autocmd FileType make set noexpandtab
+  autocmd FileType python set noexpandtab
 
-autocmd FileType ruby autocmd BufWritePre <buffer> :%s/\s\+$//e " clear trailing whitespace in ruby files
+  autocmd FileType ruby autocmd BufWritePre <buffer> :%s/\s\+$//e " clear trailing whitespace in ruby files
 
-" Remember last location in file, but not for commit messages. (see :help last-position-jump)
-autocmd BufReadPost * if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$")
-  \| exe "normal! g`\"" | endif
+  " Remember last location in file, but not for commit messages. (see :help last-position-jump)
+  autocmd BufReadPost * if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$")
+    \| exe "normal! g`\"" | endif
+endif
 
 "" Plugins
 call pathogen#infect()          " loads all plugins
