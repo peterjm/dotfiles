@@ -8,3 +8,4 @@ endif
 set guifont=Monaco:h12
 
 set guioptions-=T " Start without the toolbar
+set guioptions-=L " Don't use a left-hand scrollbar
