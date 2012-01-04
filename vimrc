@@ -34,7 +34,7 @@ set incsearch                   " incremental searching
 set ignorecase                  " searches are case insensitive...
 set smartcase                   " ... unless they contain at least one capital letter
 
-set wildignore=+*.gif,*.png,*.jpg,*.jpeg,*.bmp
+set wildignore+=*.gif,*.png,*.jpg,*.jpeg,*.bmp
 
 if has("autocmd")
   "" Filetypes
