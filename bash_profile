@@ -1,1 +1,1 @@
-. /Users/peterjm/.bashrc
+. $HOME/.bashrc
