@@ -11,7 +11,7 @@ alias top="top -o cpu"
 ### environment variables
 EDITOR="vim -f"
 VISUAL="$EDITOR"
-PATH="$HOME/bin:$PATH:/usr/local/mysql/bin"
+PATH="$HOME/bin:/usr/local/bin:/usr/local/mysql/bin:$PATH"
 LSCOLORS=gxgxcxdxbxegedabagacad
 export VISUAL EDITOR GIT_EDITOR PATH LSCOLORS
 
