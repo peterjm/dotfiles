@@ -13,7 +13,8 @@ EDITOR="vim -f"
 VISUAL="$EDITOR"
 PATH="$HOME/bin:/usr/local/bin:/usr/local/mysql/bin:$PATH"
 LSCOLORS=gxgxcxdxbxegedabagacad
-export VISUAL EDITOR GIT_EDITOR PATH LSCOLORS
+NODE_PATH="$NODE_PATH:/usr/local/lib/node"
+export VISUAL EDITOR GIT_EDITOR PATH LSCOLORS NODE_PATH
 
 export DYLD_LIBRARY_PATH=/usr/local/mysql/lib/:
 
