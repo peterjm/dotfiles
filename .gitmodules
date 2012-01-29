@@ -19,3 +19,6 @@
 [submodule "vim/bundle/gitignore"]
 	path = vim/bundle/gitignore
 	url = git@github.com:peterjm/gitignore.vim.git
+[submodule "vim/bundle/nerdcommenter"]
+	path = vim/bundle/nerdcommenter
+	url = https://github.com/scrooloose/nerdcommenter.git
