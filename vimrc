@@ -41,6 +41,7 @@ if has("autocmd")
   "" Filetypes
   autocmd BufRead,BufNewFile *.rabl setf ruby
   autocmd BufRead,BufNewFile *.god setf ruby
+  autocmd BufRead,BufNewFile *.json setf javascript
   " File types that require tabs, not spaces
   autocmd FileType make set noexpandtab
   autocmd FileType python set noexpandtab
