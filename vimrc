@@ -46,7 +46,14 @@ if has("autocmd")
   autocmd FileType make set noexpandtab
   autocmd FileType python set noexpandtab
 
-  autocmd FileType ruby autocmd BufWritePre <buffer> :%s/\s\+$//e " clear trailing whitespace in ruby files
+  " Manage whitespace on save, maintaining cursor position
+  function ClearTrailingWhitespace()
+    let save_cursor = getpos(".")
+    :silent! %s/\s\+$//e " clear trailing whitespace at the end of each line
+    :silent! %s/\($\n\)\+\%$// " clear trailing newlines
+    call setpos('.', save_cursor)
+  endfunction
+  autocmd FileType ruby autocmd BufWritePre <buffer> call ClearTrailingWhitespace()
 
   " Remember last location in file, but not for commit messages. (see :help last-position-jump)
   autocmd BufReadPost * if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$")
