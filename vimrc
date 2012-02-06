@@ -70,3 +70,7 @@ map :ctf :CommandTFlush
 
 " NERDTree
 nmap <silent> <C-D> :NERDTreeToggle<CR>
+
+" localvimrc
+let g:localvimrc_ask=0
+let g:localvimrc_sandbox=0
