@@ -1,0 +1,10 @@
+#!/bin/bash
+
+current_git_branch () {
+  git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
+}
+BRANCH_NAME=$(current_git_branch)
+
+git config branch.$BRANCH_NAME.remote origin
+git config branch.$BRANCH_NAME.merge $BRANCH_NAME
+git push origin $BRANCH_NAME
