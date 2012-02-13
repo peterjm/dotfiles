@@ -53,7 +53,7 @@ if has("autocmd")
     :silent! %s/\($\n\)\+\%$// " clear trailing newlines
     call setpos('.', save_cursor)
   endfunction
-  autocmd FileType ruby autocmd BufWritePre <buffer> call ClearTrailingWhitespace()
+  autocmd FileType ruby,haml autocmd BufWritePre <buffer> call ClearTrailingWhitespace()
 
   " Remember last location in file, but not for commit messages. (see :help last-position-jump)
   autocmd BufReadPost * if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$")
