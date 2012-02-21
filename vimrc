@@ -74,3 +74,7 @@ nmap <silent> <C-D> :NERDTreeToggle<CR>
 " localvimrc
 let g:localvimrc_ask=0
 let g:localvimrc_sandbox=0
+
+" replace all hashrocket 1.8 style ruby hashes with 1.9 style
+map :RubyHashConvert :s/\v:([^ ]+)\s*\=\>/\1:/g
+nmap <leader>h :RubyHashConvert<CR>
