@@ -54,7 +54,7 @@ if has("autocmd")
     :silent! %s/\($\n\)\+\%$// " clear trailing newlines
     call setpos('.', save_cursor)
   endfunction
-  autocmd FileType ruby autocmd BufWritePre <buffer> call ClearTrailingWhitespace()
+  autocmd FileType ruby,haml autocmd BufWritePre <buffer> call ClearTrailingWhitespace()
 
   " Remember last location in file, but not for commit messages. (see :help last-position-jump)
   autocmd BufReadPost * if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$")
@@ -71,3 +71,11 @@ map :ctf :CommandTFlush
 
 " NERDTree
 nmap <silent> <C-D> :NERDTreeToggle<CR>
+
+" localvimrc
+let g:localvimrc_ask=0
+let g:localvimrc_sandbox=0
+
+" replace all hashrocket 1.8 style ruby hashes with 1.9 style
+map :RubyHashConvert :s/\v:([^ ]+)\s*\=\>/\1:/g
+nmap <leader>h :RubyHashConvert<CR>
