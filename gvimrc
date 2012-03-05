@@ -3,6 +3,9 @@ if has("gui_macvim")
   macmenu &File.New\ Tab key=<nop>
   "map <D-t> <Plug>PeepOpen
   map <D-t> :CommandT<CR>
+
+  " use Cmd-Shift-F to start Ack
+  nmap <D-F> :Ack<space>
 endif
 
 set guifont=Monaco:h12
