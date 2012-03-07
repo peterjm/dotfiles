@@ -62,6 +62,9 @@ if has("autocmd")
     \| exe "normal! g`\"" | endif
 endif
 
+"" shortcut to re-source .vimrc
+map :src :source<space>$MYVIMRC
+
 "" Plugins
 call pathogen#infect()          " loads all plugins
 call pathogen#helptags()        " generates the helptags

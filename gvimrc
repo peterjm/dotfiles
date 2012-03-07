@@ -4,6 +4,10 @@ if has("gui_macvim")
   "map <D-t> <Plug>PeepOpen
   map <D-t> :CommandT<CR>
 
+  " map Command-Shift-T to refresh the Command-T plugin
+  macmenu &File.Open\ Tab\.\.\. key=<nop>
+  nmap <D-T> :CommandTFlush<CR>
+
   " use Cmd-Shift-F to start Ack
   nmap <D-F> :Ack<space>
 endif

@@ -1,3 +1,9 @@
+[user]
+  name = Peter McCracken
+  email = peter.mccracken@uniiverse.com
+[github]
+  user = peterjm
+  token = 16c724c31a672fc470b973fca0087daa
 [alias]
   stats = status
   st = status
