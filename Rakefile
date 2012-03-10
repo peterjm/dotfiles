@@ -1,11 +1,35 @@
-task :default => [:update, :command_t, :link]
+task :default => [:update, :gitconfig, :command_t, :link]
 
 task :update do
   sh "git submodule update --init"
 end
 
+task :gitconfig do
+  unless File.exist?("gitconfig.personal")
+    warn "create a gitconfig.personal based on gitconfig.personal.template" and return
+  end
+
+  tmp_gitconfig = File.join "/tmp", "gitconfig.tmp"
+  current_gitconfig = File.join(ENV['HOME'], ".gitconfig")
+
+  system("touch #{tmp_gitconfig}")
+  system("cat gitconfig.personal >> #{tmp_gitconfig}")
+  system("cat gitconfig >> #{tmp_gitconfig}")
+
+  if !File.exist?(current_gitconfig)
+    mv tmp_gitconfig, current_gitconfig
+  elsif !system("diff -q #{tmp_gitconfig} #{current_gitconfig}")
+    old_gitconfig = File.join("/tmp", "gitconfig.old")
+    warn "moved existing #{current_gitconfig} to #{old_gitconfig}"
+    mv current_gitconfig, old_gitconfig
+    mv tmp_gitconfig, current_gitconfig
+  else
+    rm tmp_gitconfig
+  end
+end
+
 task :link do
-  %w[ackrc bash_profile bashrc bashrc.extras gemrc gitconfig gitignore gvimrc vimrc vim].each do |file|
+  %w[ackrc bash_profile bashrc bashrc.extras gemrc gitignore gvimrc vimrc vim].each do |file|
     dotfile = File.join(ENV['HOME'], ".#{file}")
     link_file(file, dotfile)
   end
