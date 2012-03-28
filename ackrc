@@ -1,4 +1,4 @@
---type-add=ruby=.rabl,.rake
+--type-add=ruby=.rabl,.rake,.jbuilder
 --type-set=gherkin=.feature
 --type-set=haml=.haml
 --type-set=sass=.sass

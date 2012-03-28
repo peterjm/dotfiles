@@ -44,6 +44,7 @@ if has("autocmd")
   autocmd BufRead,BufNewFile *.god setf ruby
   autocmd BufRead,BufNewFile *.json setf javascript
   autocmd BufRead,BufNewFile *.json.erb setf javascript.eruby
+  autocmd BufRead,BufNewFile *.json.jbuilder setf ruby
   autocmd BufRead,BufNewFile *.ejs setf javascript
   " File types that require tabs, not spaces
   autocmd FileType make set noexpandtab
