@@ -22,7 +22,7 @@ PATH="/usr/local/bin:$PATH" # Homebrew
 PATH="$HOME/bin:$PATH" # personal bin directory
 
 LSCOLORS=gxgxcxdxbxegedabagacad
-NODE_PATH="$NODE_PATH:/usr/local/lib/node"
+NODE_PATH="$NODE_PATH:/usr/local/lib/node:/usr/local/lib/node_modules"
 export VISUAL EDITOR GIT_EDITOR PATH LSCOLORS NODE_PATH
 
 export DYLD_LIBRARY_PATH="/usr/local/mysql/lib"
@@ -40,9 +40,8 @@ PS4='+ '
 export PS1 PS2 PS4
 
 if [ -f `brew --prefix`/etc/bash_completion ]; then source `brew --prefix`/etc/bash_completion ; fi
-if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then source "$HOME/.rvm/scripts/rvm" ; fi
 
 # .bashrc.local is not kept in version control -- intended for machine specific  changes
 [ ! -f "$HOME/.bashrc.local" ] || . "$HOME/.bashrc.local"
 
-[[ -r $rvm_path/scripts/completion ]] && source $rvm_path/scripts/completion
+eval "$(rbenv init -)"
