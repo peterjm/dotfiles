@@ -5,6 +5,7 @@
 --type-set=scss=.scss
 --type-set=erb=.erb
 --type-set=coffee=.coffee
+--type-set=handlebars=.hbars,.handlebars
 
 --ignore-dir=coverage
 --ignore-dir=public/system
