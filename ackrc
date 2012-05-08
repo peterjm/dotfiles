@@ -9,6 +9,7 @@
 --ignore-dir=coverage
 --ignore-dir=public/system
 --ignore-dir=tmp
+--ignore-dir=vendor/bundle
 
 --type-set=log=.log
 --nolog
