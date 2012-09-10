@@ -12,6 +12,8 @@ set number
 set ruler                       " show the cursor position all the time
 set list                        " show invisible characters
 
+set noswapfile                  " don't save swap files
+
 "" List chars
 set listchars=""                " Reset the listchars
 set listchars=tab:\ \           " a tab should display as "  ", trailing whitespace as "."
