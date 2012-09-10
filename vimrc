@@ -52,10 +52,13 @@ if has("autocmd")
 
   " Manage whitespace on save, maintaining cursor position
   function ClearTrailingWhitespace()
-    let save_cursor = getpos(".")
-    :silent! %s/\s\+$//e " clear trailing whitespace at the end of each line
-    :silent! %s/\($\n\)\+\%$// " clear trailing newlines
-    call setpos('.', save_cursor)
+    let g:clearwhitespace = exists('g:clearwhitespace') ? g:clearwhitespace : 1
+    if g:clearwhitespace
+      let save_cursor = getpos(".")
+      :silent! %s/\s\+$//e " clear trailing whitespace at the end of each line
+      :silent! %s/\($\n\)\+\%$// " clear trailing newlines
+      call setpos('.', save_cursor)
+    endif
   endfunction
   autocmd FileType ruby,haml,eruby,javascript,coffee,handlebars,yaml autocmd BufWritePre <buffer> call ClearTrailingWhitespace()
 
