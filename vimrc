@@ -90,3 +90,6 @@ let g:localvimrc_sandbox=0
 " replace all hashrocket 1.8 style ruby hashes with 1.9 style
 map :RubyHashConvert :s/\v:([^ ]+)\s*\=\>/\1:/g
 nmap <leader>h :RubyHashConvert<CR>
+
+" Treat <li> and <p> tags like the block tags they are
+let g:html_indent_tags = 'li\|p'
