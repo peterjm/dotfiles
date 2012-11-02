@@ -1,4 +1,7 @@
 set nocompatible
+source $HOME/.vim/Vundlefile.vim
+filetype plugin indent on       " load file type plugins + indentation
+
 syntax enable                   " enable syntax highlighting
 set encoding=utf-8
 colorscheme vividchalk
@@ -7,7 +10,6 @@ set visualbell                  " disable audible bell
 let mapleader = ","             " map <Leader> to command
 
 set showcmd                     " display incomplete commands
-filetype plugin indent on       " load file type plugins + indentation
 set number
 set ruler                       " show the cursor position all the time
 set list                        " show invisible characters
@@ -73,8 +75,6 @@ endif
 map :src :source<space>$MYVIMRC
 
 "" Plugins
-call pathogen#infect()          " loads all plugins
-call pathogen#helptags()        " generates the helptags
 
 " Command T
 let g:CommandTMaxHeight=20
