@@ -4,7 +4,7 @@ filetype plugin indent on       " load file type plugins + indentation
 
 syntax enable                   " enable syntax highlighting
 set encoding=utf-8
-colorscheme vividchalk
+colorscheme jellybeans
 set background=dark             " indicates that I use a dark background
 set visualbell                  " disable audible bell
 let mapleader = ","             " map <Leader> to command
