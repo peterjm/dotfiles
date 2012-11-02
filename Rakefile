@@ -1,7 +1,11 @@
-task :default => [:update, :gitconfig, :command_t, :link]
+task :default => [:update_submodules, :install_vundles, :gitconfig, :command_t, :link]
 
-task :update do
+task :update_submodules do
   sh "git submodule update --init"
+end
+
+task :install_vundles do
+  sh "vim +BundleInstall +qall"
 end
 
 task :gitconfig do
