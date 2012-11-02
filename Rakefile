@@ -1,4 +1,4 @@
-task :default => [:update_submodules, :install_vundles, :gitconfig, :command_t, :link]
+task :default => [:update_submodules, :install_vundles, :gitconfig, :link]
 
 task :update_submodules do
   sh "git submodule update --init"
@@ -44,13 +44,6 @@ task :link do
     Dir["#{dir}/**"].each do |file|
       link_file(file, File.join(ENV['HOME'], file))
     end
-  end
-end
-
-task :command_t do
-  puts "Compiling Command-T plugin..."
-  Dir.chdir "vim/bundle/command-t" do
-    sh("rake make")
   end
 end
 

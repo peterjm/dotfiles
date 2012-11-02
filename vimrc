@@ -77,8 +77,8 @@ map :src :source<space>$MYVIMRC
 "" Plugins
 
 " Command T
-let g:CommandTMaxHeight=20
-map :ctf :CommandTFlush
+"let g:CommandTMaxHeight=20
+"map :ctf :CommandTFlush
 
 " NERDTree
 nmap <silent> <C-D> :NERDTreeToggle<CR>
