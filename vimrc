@@ -74,6 +74,9 @@ endif
 "" shortcut to re-source .vimrc
 map :src :source<space>$MYVIMRC
 
+" tab completion
+imap <Tab> <C-N>
+
 "" Plugins
 
 " Command T
