@@ -1,7 +1,0 @@
-#!/bin/bash
-
-DIR=`bundle show $1`
-echo $DIR
-if [ -d "$DIR" ]; then
-  cd $DIR && mvim
-fi

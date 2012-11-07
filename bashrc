@@ -9,6 +9,7 @@ alias ll="ls -sail"
 ### environment variables
 EDITOR="vim -f"
 VISUAL="$EDITOR"
+BUNDLER_EDITOR="mvim"
 
 ### Setting up PATH -- lower lines are higher in precedence
 PATH="/usr/local/share/npm/bin:$PATH" # node.js packages
@@ -18,7 +19,7 @@ PATH="$HOME/bin:$PATH" # personal bin directory
 
 LSCOLORS=gxgxcxdxbxegedabagacad
 NODE_PATH="$NODE_PATH:/usr/local/lib/node:/usr/local/lib/node_modules"
-export VISUAL EDITOR GIT_EDITOR PATH LSCOLORS NODE_PATH
+export VISUAL EDITOR BUNDLER_EDITOR GIT_EDITOR PATH LSCOLORS NODE_PATH
 
 export DYLD_LIBRARY_PATH="/usr/local/mysql/lib"
 
