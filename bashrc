@@ -3,12 +3,7 @@ export HISTCONTROL=erasedups # Don't store duplicates
 shopt -s histappend # Append to history file
 
 ### aliases
-alias be="bundle exec"
-alias cucumber="bundle exec cucumber"
-alias rspec="bundle exec rspec"
 alias top="top -o cpu"
-alias gff="git flow feature"
-alias gs="git flow feature start"
 alias ll="ls -sail"
 
 ### environment variables
