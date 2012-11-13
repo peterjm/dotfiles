@@ -1,12 +1,11 @@
 if has("gui_macvim")
-  " map Command-T to the Command-T plugin
+  " map Command-T to the CtrlP plugin
   macmenu &File.New\ Tab key=<nop>
-  "map <D-t> <Plug>PeepOpen
   map <D-t> :CtrlP<CR>
 
-  " map Command-Shift-T to refresh the Command-T plugin
-  "macmenu &File.Open\ Tab\.\.\. key=<nop>
-  "nmap <D-T> :CommandTFlush<CR>
+  " map Command-Shift-T to refresh the CtrlP plugin
+  macmenu &File.Open\ Tab\.\.\. key=<nop>
+  nmap <D-T> :CtrlPClearCache<CR>
 
   " use Cmd-Shift-F to start Ack
   nmap <D-F> :Ack<space>

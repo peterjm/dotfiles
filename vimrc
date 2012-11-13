@@ -79,10 +79,6 @@ imap <Tab> <C-N>
 
 "" Plugins
 
-" Command T
-"let g:CommandTMaxHeight=20
-"map :ctf :CommandTFlush
-
 " NERDTree
 nmap <silent> <C-D> :NERDTreeToggle<CR>
 
