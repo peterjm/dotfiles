@@ -82,6 +82,12 @@ imap <Tab> <C-N>
 
 "" Plugins
 
+" CtrlP
+
+" specifying these directly, because the wildignore populated by the gitignore plugin
+" doesn't work with directories
+let g:ctrlp_custom_ignore='\v[\/](vendor/bundle|tmp)$'
+
 " NERDTree
 nmap <silent> <C-D> :NERDTreeToggle<CR>
 
