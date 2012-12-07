@@ -19,5 +19,6 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'nono/vim-handlebars'
 Bundle 'kchmck/vim-coffee-script'
 
+" Colour Schemes
 Bundle 'tpope/vim-vividchalk'
 Bundle 'nanotech/jellybeans.vim'
