@@ -101,3 +101,8 @@ nmap <leader>h :RubyHashConvert<CR>
 
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
+
+" use ag instead of ack, if available
+if executable('ag')
+  let g:ackprg = 'ag --nogroup --column'
+endif
