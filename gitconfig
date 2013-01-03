@@ -1,10 +1,10 @@
 [alias]
+  s = status
   stats = status
-  st = status
   ci = commit
   br = branch
   co = checkout
-  df = diff
+  d = diff
   lg = log -p
   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
   type = cat-file -t
