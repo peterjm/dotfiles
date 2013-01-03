@@ -40,4 +40,4 @@ if [ -f `brew --prefix`/etc/bash_completion ]; then source `brew --prefix`/etc/b
 # .bashrc.local is not kept in version control -- intended for machine specific  changes
 [ ! -f "$HOME/.bashrc.local" ] || . "$HOME/.bashrc.local"
 
-eval "$(rbenv init -)"
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
