@@ -1,2 +1,11 @@
 .*.swp
 .DS_Store
+
+# environment variables set via rbenv
+.rbenv-vars
+
+# per-project vim settings
+.lvimrc
+
+# local POW config
+.powenv
