@@ -47,6 +47,7 @@ set wildignore+=*.gif,*.png,*.jpg,*.jpeg,*.bmp,*.tiff,*.psd,*.svg,*.woff,*.eot,*
 
 if has("autocmd")
   "" Filetypes
+  autocmd BufRead,BufNewFile *.task set filetype=ruby "override default setting
   autocmd BufRead,BufNewFile *.rabl setf ruby
   autocmd BufRead,BufNewFile *.god setf ruby
   autocmd BufRead,BufNewFile *.json setf javascript
