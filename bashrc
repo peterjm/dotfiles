@@ -5,6 +5,7 @@ shopt -s histappend # Append to history file
 ### aliases
 alias top="top -o cpu"
 alias ll="ls -sail"
+alias rt="ruby -Itest"
 
 ### environment variables
 EDITOR="vim -f"
