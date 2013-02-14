@@ -84,6 +84,12 @@ map :src :source<space>$MYVIMRC
 " tab completion
 imap <Tab> <C-N>
 
+"allows you to use . command in visual mode; harmless otherwise
+vnoremap . :normal.<CR>
+
+" shortcut to use the 'q' macro
+nmap <space> @q
+
 "" Plugins
 
 " CtrlP
