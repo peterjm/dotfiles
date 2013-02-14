@@ -45,6 +45,8 @@ set smartcase                   " ... unless they contain at least one capital l
 
 set wildignore+=*.gif,*.png,*.jpg,*.jpeg,*.bmp,*.tiff,*.psd,*.svg,*.woff,*.eot,*.ttf
 
+set autoread                    " when a file's content's have changed, automatically load it again
+
 if has("autocmd")
   "" Filetypes
   autocmd BufRead,BufNewFile *.rabl setf ruby
