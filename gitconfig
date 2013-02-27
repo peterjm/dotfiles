@@ -19,3 +19,5 @@
   whitespace = strip
 [push]
   default = simple
+[pull]
+  rebase = true
