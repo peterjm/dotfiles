@@ -1,1 +1,2 @@
-. $HOME/.bashrc
+[ -f ~/.profile ] && source ~/.profile
+[ -f ~/.bashrc ] && source ~/.bashrc
