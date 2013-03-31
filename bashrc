@@ -40,7 +40,10 @@ PS2='> '
 PS4='+ '
 export PS1 PS2 PS4
 
-if [ -f `brew --prefix`/etc/bash_completion ]; then source `brew --prefix`/etc/bash_completion ; fi
+if which brew > /dev/null
+then
+  if [ -f `brew --prefix`/etc/bash_completion ]; then source `brew --prefix`/etc/bash_completion ; fi
+fi
 
 # .bashrc.local is not kept in version control -- intended for machine specific  changes
 [ ! -f "$HOME/.bashrc.local" ] || . "$HOME/.bashrc.local"
