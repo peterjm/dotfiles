@@ -22,8 +22,6 @@ LSCOLORS=gxgxcxdxbxegedabagacad
 NODE_PATH="$NODE_PATH:/usr/local/lib/node:/usr/local/lib/node_modules"
 export VISUAL EDITOR BUNDLER_EDITOR GIT_EDITOR PATH LSCOLORS NODE_PATH
 
-export DYLD_LIBRARY_PATH="/usr/local/mysql/lib"
-
 # from https://gist.github.com/burke/1688857
 export RUBY_GC_MALLOC_LIMIT=60000000
 export RUBY_FREE_MIN=200000
