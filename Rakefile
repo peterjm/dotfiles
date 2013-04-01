@@ -33,7 +33,7 @@ task :gitconfig do
 end
 
 task :link do
-  %w[ackrc bash_profile bashrc bashrc.extras gemrc gitignore gvimrc tmux.conf vimrc vim].each do |file|
+  %w[ackrc bash_profile bashrc bashrc.extras gemrc gitignore gvimrc tmux.conf vimrc vim pryrc].each do |file|
     dotfile = File.join(ENV['HOME'], ".#{file}")
     link_file(file, dotfile)
   end
