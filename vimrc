@@ -25,6 +25,9 @@ set listchars+=extends:>        " The character to show in the last column when 
 set listchars+=precedes:<       " The character to show in the last column when wrap is
                                 " off and the line continues beyond the right of the screen
 
+set splitright                  " open new splits to the right
+set splitbelow                  " ... and bottom
+
 "" Whitespace
 set wrap
 set linebreak                   " soft-wrap lines at word boundaries
