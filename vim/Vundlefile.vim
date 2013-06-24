@@ -18,6 +18,7 @@ Bundle 'vim-scripts/localvimrc'
 Bundle 'tpope/vim-fugitive'
 Bundle 'nono/vim-handlebars'
 Bundle 'kchmck/vim-coffee-script'
+Bundle 'VimClojure'
 
 " Colour Schemes
 Bundle 'tpope/vim-vividchalk'
