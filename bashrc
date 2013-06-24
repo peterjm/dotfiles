@@ -46,4 +46,4 @@ fi
 # .bashrc.local is not kept in version control -- intended for machine specific  changes
 [ ! -f "$HOME/.bashrc.local" ] || . "$HOME/.bashrc.local"
 
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+if which rbenv > /dev/null; then eval "$(rbenv init - --no-rehash)"; fi
