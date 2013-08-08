@@ -100,6 +100,10 @@ nmap <space> @q
 " specifying these directly, because the wildignore populated by the gitignore plugin
 " doesn't work with directories
 let g:ctrlp_custom_ignore='\v[\/](vendor/bundle|tmp)$'
+" Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+if executable('ag')
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+endif
 
 " NERDTree
 nmap <silent> <C-D> :NERDTreeToggle<CR>
