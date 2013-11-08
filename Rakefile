@@ -33,7 +33,7 @@ task :gitconfig do
 end
 
 task :make_directories do
-  %w[bin lib].each do |dir|
+  %w[bin].each do |dir|
     home_dir = File.join(ENV['HOME'], dir)
     mkdir_p(home_dir) unless File.exist?(home_dir)
   end
@@ -45,7 +45,7 @@ task :link => :make_directories do
     link_file(file, dotfile)
   end
 
-  %w[bin lib].each do |dir|
+  %w[bin].each do |dir|
     Dir["#{dir}/**"].each do |file|
       link_file(file, File.join(ENV['HOME'], file))
     end
