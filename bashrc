@@ -5,7 +5,8 @@ shopt -s histappend # Append to history file
 ### aliases
 alias top="top -o cpu"
 alias ll="ls -sail"
-alias rt="ruby -Itest"
+alias bx="bundle exec"
+alias rt="bundle exec ruby -Itest"
 
 ### environment variables
 EDITOR="vim -f"
@@ -14,7 +15,7 @@ BUNDLER_EDITOR="mvim"
 
 ### Setting up PATH -- lower lines are higher in precedence
 PATH="/usr/local/share/npm/bin:$PATH" # node.js packages
-PATH="/usr/local/mysql/bin:$PATH" # MySQL
+#PATH="/usr/local/mysql/bin:$PATH" # MySQL
 PATH="/usr/local/bin:$PATH" # Homebrew
 PATH="$HOME/bin:$PATH" # personal bin directory
 
