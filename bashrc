@@ -27,9 +27,6 @@ export VISUAL EDITOR BUNDLER_EDITOR GIT_EDITOR PATH LSCOLORS NODE_PATH
 export RUBY_GC_MALLOC_LIMIT=60000000
 export RUBY_FREE_MIN=200000
 
-### adds git-freeze and git-thaw commands
-[ ! -f "$HOME/lib/git-freeze.sh" ] || . "$HOME/lib/git-freeze.sh"
-
 ### additional functions stored here to keep .bashrc clean
 [ ! -f "$HOME/.bashrc.extras" ] || . "$HOME/.bashrc.extras"
 
