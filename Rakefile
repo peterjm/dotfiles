@@ -1,4 +1,4 @@
-task :default => [:update_submodules, :install_vundles, :gitconfig, :link]
+task :default => [:update_submodules, :install_vundles, :gitconfig, :make_directories, :link]
 
 task :update_submodules do
   sh "git submodule update --init"
@@ -32,15 +32,20 @@ task :gitconfig do
   end
 end
 
-task :link do
+task :make_directories do
+  %w[bin lib].each do |dir|
+    home_dir = File.join(ENV['HOME'], dir)
+    mkdir_p(home_dir) unless File.exist?(home_dir)
+  end
+end
+
+task :link => :make_directories do
   %w[ackrc bash_profile bashrc bashrc.extras gemrc gitignore gvimrc vimrc vim pryrc].each do |file|
     dotfile = File.join(ENV['HOME'], ".#{file}")
     link_file(file, dotfile)
   end
 
-  %w[bin].each do |dir|
-    home_dir = File.join(ENV['HOME'], dir)
-    mkdir_p(home_dir) unless File.exist?(home_dir)
+  %w[bin lib].each do |dir|
     Dir["#{dir}/**"].each do |file|
       link_file(file, File.join(ENV['HOME'], file))
     end
