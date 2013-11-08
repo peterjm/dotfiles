@@ -11,6 +11,7 @@
 --ignore-dir=public/system
 --ignore-dir=tmp
 --ignore-dir=vendor/bundle
+--ignore-dir=generated
 
 --type-set=log=.log
 --nolog
