@@ -42,7 +42,9 @@ git_prompt_info () {
     [[ $s =~ "$newfile" ]] && d+='+'
     [[ $s =~ "M " ]] && d+='*'
     [[ $s =~ "D " ]] && d+='-'
-    [[ -f ".git-frozen " ]] && d+='~'
+    if [ -f ".git-frozen" ] ; then
+      d+='~'
+    fi
 
     if [ -n "${1-}" ]; then
       printf "$1" "${b##refs/heads/}$r$d"
