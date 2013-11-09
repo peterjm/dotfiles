@@ -1,3 +1,6 @@
+DIRECTORIES = %w[bin scratch lib]
+DOTFILES = %w[ackrc bash_profile bashrc bashrc.extras gemrc gitignore gvimrc vimrc vim pryrc bundle]
+
 task :default => [:update_submodules, :install_vundles, :gitconfig, :make_directories, :link]
 
 task :update_submodules do
@@ -33,19 +36,19 @@ task :gitconfig do
 end
 
 task :make_directories do
-  %w[bin].each do |dir|
+  DIRECTORIES.each do |dir|
     home_dir = File.join(ENV['HOME'], dir)
     mkdir_p(home_dir) unless File.exist?(home_dir)
   end
 end
 
 task :link => :make_directories do
-  %w[ackrc bash_profile bashrc bashrc.extras gemrc gitignore gvimrc vimrc vim pryrc bundle].each do |file|
+  DOTFILES.each do |file|
     dotfile = File.join(ENV['HOME'], ".#{file}")
     link_file(file, dotfile)
   end
 
-  %w[bin].each do |dir|
+  DIRECTORIES.each do |dir|
     Dir["#{dir}/**"].each do |file|
       link_file(file, File.join(ENV['HOME'], file))
     end
