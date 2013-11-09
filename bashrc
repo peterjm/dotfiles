@@ -4,7 +4,7 @@ shopt -s histappend # Append to history file
 
 ### aliases
 alias top="top -o cpu"
-alias ls="ls -p"
+alias ls="ls -pFh"
 alias bx="bundle exec"
 alias rt="bundle exec ruby -Itest"
 
