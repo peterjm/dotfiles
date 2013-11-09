@@ -13,6 +13,9 @@
 # indicates whether the repo has been frozen
 .git-frozen
 
+# vendored gems
+vendor/bundle
+
 .DS_Store?
 .Spotlight-V100
 .Trashes
