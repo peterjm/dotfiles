@@ -4,7 +4,7 @@ shopt -s histappend # Append to history file
 
 ### aliases
 alias top="top -o cpu"
-alias ll="ls -sail"
+alias ls="ls -p"
 alias bx="bundle exec"
 alias rt="bundle exec ruby -Itest"
 
@@ -19,9 +19,10 @@ PATH="/usr/local/share/npm/bin:$PATH" # node.js packages
 PATH="/usr/local/bin:$PATH" # Homebrew
 PATH="$HOME/bin:$PATH" # personal bin directory
 
-LSCOLORS=gxgxcxdxbxegedabagacad
+CLICOLOR=1
+LSCOLORS=gxFxhxDxfxhxhxhxhxcxcx
 NODE_PATH="$NODE_PATH:/usr/local/lib/node:/usr/local/lib/node_modules"
-export VISUAL EDITOR BUNDLER_EDITOR GIT_EDITOR PATH LSCOLORS NODE_PATH
+export VISUAL EDITOR BUNDLER_EDITOR GIT_EDITOR PATH CLICOLOR LSCOLORS NODE_PATH
 
 # from https://gist.github.com/burke/1688857
 export RUBY_GC_MALLOC_LIMIT=60000000
