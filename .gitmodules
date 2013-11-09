@@ -4,3 +4,6 @@
 [submodule "submodules/git-freeze"]
 	path = submodules/git-freeze
 	url = git@github.com:peterjm/git-freeze.git
+[submodule "submodules/restart_all_pow_applications"]
+	path = submodules/restart_all_pow_applications
+	url = https://gist.github.com/7381116.git
