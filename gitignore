@@ -1,6 +1,3 @@
-.*.swp
-.DS_Store
-
 # environment variables set via rbenv
 .rbenv-vars
 
@@ -25,3 +22,4 @@ Thumbs.db
 ehthumbs.db
 *.swp
 *.swo
+.netrwhist
