@@ -1,4 +1,7 @@
-function git-frozen () { return 1 } # return false
+# return false; if git freeze is available the function will be overwritten by include
+function git-frozen () {
+  return 1
+}
 [ ! -f "$HOME/lib/git-freeze.sh" ] || . "$HOME/lib/git-freeze.sh"
 
 # git_prompt_info accepts 0 or 1 arguments (i.e., format string)
@@ -45,7 +48,7 @@ git_prompt_info () {
     [[ $s =~ "$newfile" ]] && d+='+'
     [[ $s =~ "M " ]] && d+='*'
     [[ $s =~ "D " ]] && d+='-'
-    if git-frozen ; then d+='~' ; fi
+    git-frozen && d+='~'
 
     if [ -n "${1-}" ]; then
       printf "$1" "${b##refs/heads/}$r$d"
