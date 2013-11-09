@@ -7,3 +7,6 @@
 [submodule "submodules/restart_all_pow_applications"]
 	path = submodules/restart_all_pow_applications
 	url = https://gist.github.com/7381116.git
+[submodule "submodules/git-push-remote"]
+	path = submodules/git-push-remote
+	url = https://gist.github.com/7381172.git
