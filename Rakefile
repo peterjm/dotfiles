@@ -1,5 +1,10 @@
-DIRECTORIES = %w[bin scratch lib]
-DOTFILES = %w[ackrc bash_profile bashrc bashrc.extras gemrc gitignore gvimrc vimrc vim pryrc bundle]
+DOTFILES = %w[ackrc bash_profile bashrc gemrc gitignore gvimrc vimrc vim pryrc bundle]
+DIRECTORIES = {
+  'bin' => 'bin',
+  'scratch' => 'scratch',
+  'lib' => 'lib',
+  'bash' => '.bash'
+}
 
 task :default => [:update_submodules, :install_vundles, :gitconfig, :make_directories, :link]
 
@@ -36,7 +41,7 @@ task :gitconfig do
 end
 
 task :make_directories do
-  DIRECTORIES.each do |dir|
+  DIRECTORIES.values.each do |dir|
     home_dir = File.join(ENV['HOME'], dir)
     mkdir_p(home_dir) unless File.exist?(home_dir)
   end
@@ -48,9 +53,11 @@ task :link => :make_directories do
     link_file(file, dotfile)
   end
 
-  DIRECTORIES.each do |dir|
-    Dir["#{dir}/**"].each do |file|
-      link_file(file, File.join(ENV['HOME'], file))
+  DIRECTORIES.each do |dotfiles_dir, system_dir|
+    Dir["#{dotfiles_dir}/**"].each do |file|
+      bare_file = remove_directory(file, dotfiles_dir)
+      link_location = File.join(ENV['HOME'], system_dir, bare_file)
+      link_file(file, link_location)
     end
   end
 end
@@ -61,4 +68,8 @@ def link_file(src, dest)
   else
     ln_s File.join(File.dirname(__FILE__), src), dest
   end
+end
+
+def remove_directory(file, dir)
+   file =~ /^#{dir}\/(.*)$/ && $1
 end

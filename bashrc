@@ -29,7 +29,9 @@ export RUBY_GC_MALLOC_LIMIT=60000000
 export RUBY_FREE_MIN=200000
 
 ### additional functions stored here to keep .bashrc clean
-[ ! -f "$HOME/.bashrc.extras" ] || . "$HOME/.bashrc.extras"
+if [ ! -f "$HOME/.bash" ]; then
+  for f in ~/.bash/*.sh; do source $f; done
+fi
 
 ### prompt
 # If I am root, set the prompt to bright red
@@ -45,7 +47,7 @@ then
   if [ -f `brew --prefix`/etc/bash_completion ]; then source `brew --prefix`/etc/bash_completion ; fi
 fi
 
-# .bashrc.local is not kept in version control -- intended for machine specific  changes
+# .bashrc.local is not kept in version control -- intended for machine specific changes
 [ ! -f "$HOME/.bashrc.local" ] || . "$HOME/.bashrc.local"
 
 if which rbenv > /dev/null; then eval "$(rbenv init - --no-rehash)"; fi
