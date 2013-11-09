@@ -10,9 +10,6 @@
 # configuration for The Silver Searcher
 .agignore
 
-# indicates whether the repo has been frozen
-.git-frozen
-
 # vendored gems
 vendor/bundle
 
