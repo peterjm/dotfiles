@@ -40,7 +40,7 @@ task :make_directories do
 end
 
 task :link => :make_directories do
-  %w[ackrc bash_profile bashrc bashrc.extras gemrc gitignore gvimrc vimrc vim pryrc].each do |file|
+  %w[ackrc bash_profile bashrc bashrc.extras gemrc gitignore gvimrc vimrc vim pryrc bundle].each do |file|
     dotfile = File.join(ENV['HOME'], ".#{file}")
     link_file(file, dotfile)
   end
