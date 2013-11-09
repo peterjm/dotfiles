@@ -1,3 +1,6 @@
+function git-frozen () { return 1 } # return false
+[ ! -f "$HOME/lib/git-freeze.sh" ] || . "$HOME/lib/git-freeze.sh"
+
 # git_prompt_info accepts 0 or 1 arguments (i.e., format string)
 # returns text to add to bash PS1 prompt (includes branch name)
 git_prompt_info () {
@@ -42,9 +45,7 @@ git_prompt_info () {
     [[ $s =~ "$newfile" ]] && d+='+'
     [[ $s =~ "M " ]] && d+='*'
     [[ $s =~ "D " ]] && d+='-'
-    if [ -f ".git-frozen" ] ; then
-      d+='~'
-    fi
+    if git-frozen ; then d+='~' ; fi
 
     if [ -n "${1-}" ]; then
       printf "$1" "${b##refs/heads/}$r$d"
