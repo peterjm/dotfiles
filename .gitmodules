@@ -10,3 +10,6 @@
 [submodule "submodules/git-push-remote"]
 	path = submodules/git-push-remote
 	url = https://gist.github.com/7381172.git
+[submodule "submodules/active_record_after_instantiate"]
+	path = submodules/active_record_after_instantiate
+	url = https://gist.github.com/7381259.git
