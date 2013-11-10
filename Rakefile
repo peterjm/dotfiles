@@ -31,6 +31,7 @@ task :gitconfig do
   if !File.exist?(current_gitconfig)
     mv tmp_gitconfig, current_gitconfig
   elsif !system("diff -q #{tmp_gitconfig} #{current_gitconfig}")
+    system("diff #{current_gitconfig} #{tmp_gitconfig}")
     old_gitconfig = File.join("/tmp", "gitconfig.old")
     warn "moved existing #{current_gitconfig} to #{old_gitconfig}"
     mv current_gitconfig, old_gitconfig
