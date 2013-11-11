@@ -12,6 +12,7 @@
 
 # vendored gems
 vendor/bundle
+binstubs/*
 
 .DS_Store?
 .Spotlight-V100
