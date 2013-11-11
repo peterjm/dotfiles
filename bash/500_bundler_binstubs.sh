@@ -1,1 +1,1 @@
-export PATH="./binstubs:$PATH"
+export PATH=".bundle/bin:$PATH"
