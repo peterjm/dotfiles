@@ -11,8 +11,7 @@
 .agignore
 
 # vendored gems
-vendor/bundle
-binstubs/*
+.bundle/
 
 .DS_Store?
 .Spotlight-V100
