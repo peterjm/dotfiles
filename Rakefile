@@ -1,12 +1,6 @@
 DOTFILES = %w[vim]
-DIRECTORIES = {
-  'bin' => 'bin',
-  'scratch' => 'scratch',
-  'lib' => 'lib',
-  'bash' => '.bash'
-}
 
-task :default => [:update_submodules, :install_vundles, :gitconfig, :make_directories, :link]
+task :default => [:update_submodules, :install_vundles, :gitconfig, :link]
 
 task :update_submodules do
   sh "git submodule update --init"
@@ -41,30 +35,19 @@ task :gitconfig do
   end
 end
 
-task :make_directories do
-  DIRECTORIES.values.each do |dir|
-    home_dir = File.join(ENV['HOME'], dir)
-    mkdir_p(home_dir) unless File.exist?(home_dir)
-  end
-end
+task :link do
 
-task :link => :make_directories do
-  Dir.glob("system/**") do |systemfile|
-    dotfile = File.join(ENV['HOME'], systemfile.sub(%r{^system/}, '').sub(/^_/, '.'))
-    link_file(systemfile, dotfile)
+  Dir.glob("system/**/**") do |systemfile|
+    path = remove_directory(systemfile, "system").split(File::SEPARATOR).map{|s|dotify(s)}
+    file = path.pop
+    home_dir = File.join(ENV['HOME'], *path)
+    mkdir_p(home_dir) unless File.exist?(home_dir)
+    link_file(systemfile, File.join(home_dir, file))
   end
 
   DOTFILES.each do |file|
     dotfile = File.join(ENV['HOME'], ".#{file}")
     link_file(file, dotfile)
-  end
-
-  DIRECTORIES.each do |dotfiles_dir, system_dir|
-    Dir["#{dotfiles_dir}/**"].each do |file|
-      bare_file = remove_directory(file, dotfiles_dir)
-      link_location = File.join(ENV['HOME'], system_dir, bare_file)
-      link_file(file, link_location)
-    end
   end
 end
 
@@ -77,5 +60,9 @@ def link_file(src, dest)
 end
 
 def remove_directory(file, dir)
-   file =~ /^#{dir}\/(.*)$/ && $1
+  file =~ /^#{dir}\/(.*)$/ && $1
+end
+
+def dotify(str)
+  str.sub(/^_/, '.')
 end
