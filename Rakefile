@@ -35,7 +35,6 @@ end
 
 task :link do
   link_system_directory("system")
-  link_file("vim", ".vim")
 end
 
 def link_system_directory(system_dir)
