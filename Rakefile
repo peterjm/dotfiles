@@ -1,4 +1,4 @@
-DOTFILES = %w[ackrc bash_profile bashrc gemrc gitignore gvimrc vimrc vim pryrc bundle]
+DOTFILES = %w[ackrc bash_profile bashrc gemrc gitignore gvimrc vimrc vim pryrc bundle gitconfig]
 DIRECTORIES = {
   'bin' => 'bin',
   'scratch' => 'scratch',
@@ -17,22 +17,22 @@ task :install_vundles do
 end
 
 task :gitconfig do
-  unless File.exist?("gitconfig.personal")
+  unless File.exist?(File.join("gitconfigure", "gitconfig.personal"))
     warn "create a gitconfig.personal based on gitconfig.personal.template" and return
   end
 
-  tmp_gitconfig = File.join "/tmp", "gitconfig.tmp"
-  current_gitconfig = File.join(ENV['HOME'], ".gitconfig")
+  tmp_gitconfig = "gitconfig.tmp"
+  current_gitconfig = "gitconfig"
 
-  system("touch #{tmp_gitconfig}")
-  system("cat gitconfig.personal >> #{tmp_gitconfig}")
-  system("cat gitconfig >> #{tmp_gitconfig}")
+  `touch #{tmp_gitconfig}`
+  `cat gitconfigure/gitconfig.personal >> #{tmp_gitconfig}`
+  `cat gitconfigure/gitconfig >> #{tmp_gitconfig}`
 
   if !File.exist?(current_gitconfig)
     mv tmp_gitconfig, current_gitconfig
   elsif !system("diff -q #{tmp_gitconfig} #{current_gitconfig}")
     system("diff #{current_gitconfig} #{tmp_gitconfig}")
-    old_gitconfig = File.join("/tmp", "gitconfig.old")
+    old_gitconfig = File.join("gitconfigure", "gitconfig.old")
     warn "moved existing #{current_gitconfig} to #{old_gitconfig}"
     mv current_gitconfig, old_gitconfig
     mv tmp_gitconfig, current_gitconfig
