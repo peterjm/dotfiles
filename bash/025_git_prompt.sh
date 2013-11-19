@@ -46,7 +46,7 @@ git_prompt_info () {
     d=''
     s=$(git status --porcelain 2> /dev/null)
     [[ $s =~ "$newfile" ]] && d+='+'
-    [[ $s =~ "M " ]] && d+='*'
+    [[ $s =~ "M " ]] || [[ $s =~ "A " ]] && d+='*'
     [[ $s =~ "D " ]] && d+='-'
     git-frozen && d+='~'
 
