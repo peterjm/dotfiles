@@ -34,11 +34,25 @@ task :gitconfig do
 end
 
 task :link do
-  link_system_directory("system")
+  system_directories.each do |system_dir|
+    link_system_directory(system_dir)
+  end
+end
+
+def system_directories
+  [
+    "system",
+    dropbox_path("system/common"),
+    dropbox_path("system/#{hostname}")
+  ]
 end
 
 def link_system_directory(system_dir)
+  return unless File.exist?(system_dir)
+
   Dir.glob("#{system_dir}/**/**") do |systemfile|
+    next if File.directory?(systemfile)
+
     relative_file = remove_directory(systemfile, system_dir)
     dotfile = dotify(relative_file)
 
@@ -48,16 +62,16 @@ def link_system_directory(system_dir)
 end
 
 def make_directory(dir)
-  home_dir = home_file(dir)
+  home_dir = home_path(dir)
   mkdir_p(home_dir) unless File.exist?(home_dir)
 end
 
 def link_file(src, dest)
-  linkname = home_file(dest)
+  linkname = home_path(dest)
   if File.exist? linkname
     warn "#{linkname} already exists"
   else
-    ln_s File.join(File.dirname(__FILE__), src), linkname
+    ln_s File.expand_path(src, File.dirname(__FILE__)), linkname
   end
 end
 
@@ -69,6 +83,14 @@ def dotify(path)
   File.join path.split(File::SEPARATOR).map{ |s| s.sub(/^_/, '.') }
 end
 
-def home_file(path)
+def home_path(path)
   File.join ENV['HOME'], path
+end
+
+def dropbox_path(path)
+  home_path File.join("Dropbox", path)
+end
+
+def hostname
+  `hostname -s`
 end
