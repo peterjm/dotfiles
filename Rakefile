@@ -1,4 +1,4 @@
-DOTFILES = %w[ackrc bash_profile bashrc gemrc gitignore gvimrc vimrc vim pryrc bundle gitconfig]
+DOTFILES = %w[vim]
 DIRECTORIES = {
   'bin' => 'bin',
   'scratch' => 'scratch',
@@ -22,7 +22,7 @@ task :gitconfig do
   end
 
   tmp_gitconfig = "gitconfig.tmp"
-  current_gitconfig = "gitconfig"
+  current_gitconfig = "system/_gitconfig"
 
   `touch #{tmp_gitconfig}`
   `cat gitconfigure/gitconfig.personal >> #{tmp_gitconfig}`
@@ -49,6 +49,11 @@ task :make_directories do
 end
 
 task :link => :make_directories do
+  Dir.glob("system/**") do |systemfile|
+    dotfile = File.join(ENV['HOME'], systemfile.sub(%r{^system/}, '').sub(/^_/, '.'))
+    link_file(systemfile, dotfile)
+  end
+
   DOTFILES.each do |file|
     dotfile = File.join(ENV['HOME'], ".#{file}")
     link_file(file, dotfile)
