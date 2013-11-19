@@ -36,12 +36,10 @@ task :gitconfig do
 end
 
 task :link do
-
   Dir.glob("system/**/**") do |systemfile|
     path = remove_directory(systemfile, "system").split(File::SEPARATOR).map{|s|dotify(s)}
     file = path.pop
-    home_dir = File.join(ENV['HOME'], *path)
-    mkdir_p(home_dir) unless File.exist?(home_dir)
+    make_directory(*path)
     link_file(systemfile, File.join(home_dir, file))
   end
 
@@ -49,6 +47,11 @@ task :link do
     dotfile = File.join(ENV['HOME'], ".#{file}")
     link_file(file, dotfile)
   end
+end
+
+def make_directory(*path)
+  home_dir = File.join(ENV['HOME'], path)
+  mkdir_p(home_dir) unless File.exist?(home_dir)
 end
 
 def link_file(src, dest)
