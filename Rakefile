@@ -1,5 +1,3 @@
-DOTFILES = %w[vim]
-
 task :default => [:update_submodules, :install_vundles, :gitconfig, :link]
 
 task :update_submodules do
@@ -36,29 +34,31 @@ task :gitconfig do
 end
 
 task :link do
-  Dir.glob("system/**/**") do |systemfile|
-    path = remove_directory(systemfile, "system").split(File::SEPARATOR).map{|s|dotify(s)}
-    file = path.pop
-    make_directory(*path)
-    link_file(systemfile, File.join(home_dir, file))
-  end
+  link_system_directory("system")
+  link_file("vim", ".vim")
+end
 
-  DOTFILES.each do |file|
-    dotfile = File.join(ENV['HOME'], ".#{file}")
-    link_file(file, dotfile)
+def link_system_directory(system_dir)
+  Dir.glob("#{system_dir}/**/**") do |systemfile|
+    relative_file = remove_directory(systemfile, system_dir)
+    dotfile = dotify(relative_file)
+
+    make_directory(File.dirname(dotfile))
+    link_file(systemfile, dotfile)
   end
 end
 
-def make_directory(*path)
-  home_dir = File.join(ENV['HOME'], path)
+def make_directory(dir)
+  home_dir = home_file(dir)
   mkdir_p(home_dir) unless File.exist?(home_dir)
 end
 
 def link_file(src, dest)
-  if File.exist? dest
-    warn "#{dest} already exists"
+  linkname = home_file(dest)
+  if File.exist? linkname
+    warn "#{linkname} already exists"
   else
-    ln_s File.join(File.dirname(__FILE__), src), dest
+    ln_s File.join(File.dirname(__FILE__), src), linkname
   end
 end
 
@@ -66,6 +66,10 @@ def remove_directory(file, dir)
   file =~ /^#{dir}\/(.*)$/ && $1
 end
 
-def dotify(str)
-  str.sub(/^_/, '.')
+def dotify(path)
+  File.join path.split(File::SEPARATOR).map{ |s| s.sub(/^_/, '.') }
+end
+
+def home_file(path)
+  File.join ENV['HOME'], path
 end
