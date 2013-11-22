@@ -46,7 +46,7 @@ task :gitconfig do
     mv current_gitconfig, old_gitconfig
     mv tmp_gitconfig, current_gitconfig
   else
-    rm tmp_gitconfig
+    `rm #{tmp_gitconfig}`
   end
 end
 
