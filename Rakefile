@@ -51,7 +51,7 @@ def link_system_directory(system_dir)
   return unless File.exist?(system_dir)
 
   Dir.glob("#{system_dir}/**/**") do |systemfile|
-    next if File.directory?(systemfile)
+    next if File.directory?(systemfile) && !File.symlink?(systemfile)
 
     relative_file = remove_directory(systemfile, system_dir)
     dotfile = dotify(relative_file)
