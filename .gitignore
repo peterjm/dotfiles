@@ -1,4 +1,4 @@
 vim/bundle/*
 !vim/bundle/vundle
 gitconfigure/gitconfig.personal
-gitconfig
+system/_gitconfig

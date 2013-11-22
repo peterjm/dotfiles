@@ -1,5 +1,5 @@
 [submodule "vim/bundle/vundle"]
-	path = vim/bundle/vundle
+	path = submodules/vundle
 	url = https://github.com/gmarik/vundle.git
 [submodule "submodules/git-freeze"]
 	path = submodules/git-freeze

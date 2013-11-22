@@ -1,19 +1,28 @@
-DOTFILES = %w[ackrc bash_profile bashrc gemrc gitignore gvimrc vimrc vim pryrc bundle gitconfig]
-DIRECTORIES = {
-  'bin' => 'bin',
-  'scratch' => 'scratch',
-  'lib' => 'lib',
-  'bash' => '.bash'
-}
+task :default => [:install_submodules, :gitconfig, :link, :install_vundles]
+task :update => [:update_submodules, :update_vundles]
+task :clean => [:delete_vundles, :unlink]
 
-task :default => [:update_submodules, :install_vundles, :gitconfig, :make_directories, :link]
+task :install_submodules do
+  sh "git submodule update --init"
+end
 
 task :update_submodules do
-  sh "git submodule update --init"
+  sh "git submodule foreach git pull origin master"
 end
 
 task :install_vundles do
   sh "vim +BundleInstall +qall"
+end
+
+task :update_vundles do
+  sh "vim +BundleInstall! +qall"
+end
+
+task :delete_vundles do
+  Dir.glob(home_path(".vim/bundle/**")) do |vundle|
+    next if File.symlink?(vundle)
+    rm_r vundle
+  end
 end
 
 task :gitconfig do
@@ -22,7 +31,7 @@ task :gitconfig do
   end
 
   tmp_gitconfig = "gitconfig.tmp"
-  current_gitconfig = "gitconfig"
+  current_gitconfig = "system/_gitconfig"
 
   `touch #{tmp_gitconfig}`
   `cat gitconfigure/gitconfig.personal >> #{tmp_gitconfig}`
@@ -41,36 +50,105 @@ task :gitconfig do
   end
 end
 
-task :make_directories do
-  DIRECTORIES.values.each do |dir|
-    home_dir = File.join(ENV['HOME'], dir)
-    mkdir_p(home_dir) unless File.exist?(home_dir)
+task :link do
+  system_directories.each do |system_dir|
+    link_system_directory(system_dir)
   end
 end
 
-task :link => :make_directories do
-  DOTFILES.each do |file|
-    dotfile = File.join(ENV['HOME'], ".#{file}")
-    link_file(file, dotfile)
+task :unlink do
+  system_directories.each do |system_dir|
+    unlink_system_directory(system_dir)
   end
+end
 
-  DIRECTORIES.each do |dotfiles_dir, system_dir|
-    Dir["#{dotfiles_dir}/**"].each do |file|
-      bare_file = remove_directory(file, dotfiles_dir)
-      link_location = File.join(ENV['HOME'], system_dir, bare_file)
-      link_file(file, link_location)
-    end
+def system_directories
+  [
+    "system",
+    dropbox_path("system/common"),
+    dropbox_path("system/#{hostname}")
+  ]
+end
+
+def each_system_file(system_dir)
+  return unless File.exist?(system_dir)
+
+  Dir.glob("#{system_dir}/**/**") do |systemfile|
+    next unless File.file?(systemfile) || File.symlink?(systemfile)
+
+    relative_file = without_directory(systemfile, system_dir)
+    dotfile = home_path(dotify(relative_file))
+    systemfile = expanded_path(systemfile)
+
+    yield dotfile, systemfile
   end
+end
+
+def link_system_directory(system_dir)
+  each_system_file(system_dir) do |dotfile, systemfile|
+    make_directory(File.dirname(dotfile))
+    link_file(systemfile, dotfile)
+  end
+end
+
+def unlink_system_directory(system_dir)
+  each_system_file(system_dir) do |dotfile, systemfile|
+    next unless links_to?(dotfile, systemfile)
+    unlink_file(dotfile)
+
+    dir = File.dirname(dotfile)
+    remove_directory(dir) if directory_empty?(dir)
+  end
+end
+
+def make_directory(dir)
+  mkdir_p(dir) unless File.exist?(dir)
+end
+
+def directory_empty?(dir)
+  Dir.entries(dir) == %w[. ..]
+end
+
+def remove_directory(dir)
+  rmdir dir
 end
 
 def link_file(src, dest)
   if File.exist? dest
     warn "#{dest} already exists"
   else
-    ln_s File.join(File.dirname(__FILE__), src), dest
+    ln_s src, dest
   end
 end
 
-def remove_directory(file, dir)
-   file =~ /^#{dir}\/(.*)$/ && $1
+def links_to?(dest, src)
+  File.exist?(dest) && File.readlink(dest) == src
+end
+
+def unlink_file(file)
+  rm file
+end
+
+def without_directory(file, dir)
+  file =~ /^#{dir}\/(.*)$/ && $1
+end
+
+def dotify(path)
+  File.join path.split(File::SEPARATOR).map{ |s| s.sub(/^_/, '.') }
+end
+
+def expanded_path(path)
+  File.expand_path(path, File.dirname(__FILE__))
+end
+
+def home_path(path)
+  File.join ENV['HOME'], path
+end
+
+def dropbox_path(path)
+  home_path File.join("Dropbox", path)
+end
+
+def hostname
+  `hostname -s`
 end
