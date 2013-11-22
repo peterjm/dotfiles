@@ -150,5 +150,5 @@ def dropbox_path(path)
 end
 
 def hostname
-  `hostname -s`
+  `hostname -s`.strip
 end
