@@ -115,14 +115,14 @@ end
 
 def link_file(src, dest)
   if File.exist? dest
-    warn "#{dest} already exists"
+    warn "#{dest} already exists" unless links_to?(dest, src)
   else
     ln_s src, dest
   end
 end
 
 def links_to?(dest, src)
-  File.exist?(dest) && File.readlink(dest) == src
+  File.exist?(dest) && File.symlink?(dest) && File.readlink(dest) == src
 end
 
 def unlink_file(file)
