@@ -1,11 +1,28 @@
-task :default => [:update_submodules, :install_vundles, :gitconfig, :link]
+task :default => [:install_submodules, :gitconfig, :link, :install_vundles]
+task :update => [:update_submodules, :update_vundles]
+task :clean => [:delete_vundles, :unlink]
+
+task :install_submodules do
+  sh "git submodule update --init"
+end
 
 task :update_submodules do
-  sh "git submodule update --init"
+  sh "git submodule foreach git pull origin master"
 end
 
 task :install_vundles do
   sh "vim +BundleInstall +qall"
+end
+
+task :update_vundles do
+  sh "vim +BundleInstall! +qall"
+end
+
+task :delete_vundles do
+  Dir.glob(home_path(".vim/bundle/**")) do |vundle|
+    next if File.symlink?(vundle)
+    rm_r vundle
+  end
 end
 
 task :gitconfig do
@@ -39,6 +56,12 @@ task :link do
   end
 end
 
+task :unlink do
+  system_directories.each do |system_dir|
+    unlink_system_directory(system_dir)
+  end
+end
+
 def system_directories
   [
     "system",
@@ -47,40 +70,75 @@ def system_directories
   ]
 end
 
-def link_system_directory(system_dir)
+def each_system_file(system_dir)
   return unless File.exist?(system_dir)
 
   Dir.glob("#{system_dir}/**/**") do |systemfile|
-    next if File.directory?(systemfile) && !File.symlink?(systemfile)
+    next unless File.file?(systemfile) || File.symlink?(systemfile)
 
-    relative_file = remove_directory(systemfile, system_dir)
-    dotfile = dotify(relative_file)
+    relative_file = without_directory(systemfile, system_dir)
+    dotfile = home_path(dotify(relative_file))
+    systemfile = expanded_path(systemfile)
 
+    yield dotfile, systemfile
+  end
+end
+
+def link_system_directory(system_dir)
+  each_system_file(system_dir) do |dotfile, systemfile|
     make_directory(File.dirname(dotfile))
     link_file(systemfile, dotfile)
   end
 end
 
-def make_directory(dir)
-  home_dir = home_path(dir)
-  mkdir_p(home_dir) unless File.exist?(home_dir)
-end
+def unlink_system_directory(system_dir)
+  each_system_file(system_dir) do |dotfile, systemfile|
+    next unless links_to?(dotfile, systemfile)
+    unlink_file(dotfile)
 
-def link_file(src, dest)
-  linkname = home_path(dest)
-  if File.exist? linkname
-    warn "#{linkname} already exists"
-  else
-    ln_s File.expand_path(src, File.dirname(__FILE__)), linkname
+    dir = File.dirname(dotfile)
+    remove_directory(dir) if directory_empty?(dir)
   end
 end
 
-def remove_directory(file, dir)
+def make_directory(dir)
+  mkdir_p(dir) unless File.exist?(dir)
+end
+
+def directory_empty?(dir)
+  Dir.entries(dir) == %w[. ..]
+end
+
+def remove_directory(dir)
+  rmdir dir
+end
+
+def link_file(src, dest)
+  if File.exist? dest
+    warn "#{dest} already exists"
+  else
+    ln_s src, dest
+  end
+end
+
+def links_to?(dest, src)
+  File.exist?(dest) && File.readlink(dest) == src
+end
+
+def unlink_file(file)
+  rm file
+end
+
+def without_directory(file, dir)
   file =~ /^#{dir}\/(.*)$/ && $1
 end
 
 def dotify(path)
   File.join path.split(File::SEPARATOR).map{ |s| s.sub(/^_/, '.') }
+end
+
+def expanded_path(path)
+  File.expand_path(path, File.dirname(__FILE__))
 end
 
 def home_path(path)
