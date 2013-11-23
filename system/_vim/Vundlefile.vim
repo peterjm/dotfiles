@@ -24,3 +24,4 @@ Bundle 'VimClojure'
 " Colour Schemes
 Bundle 'tpope/vim-vividchalk'
 Bundle 'nanotech/jellybeans.vim'
+Bundle 'altercation/vim-colors-solarized'
