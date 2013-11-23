@@ -97,10 +97,8 @@ nmap <space> @q
 "" Plugins
 
 " CtrlP
+nmap <silent> <leader><C-P> :CtrlPClearCache<CR>
 
-" specifying these directly, because the wildignore populated by the gitignore plugin
-" doesn't work with directories
-let g:ctrlp_custom_ignore='\v[\/](vendor/bundle|tmp)$'
 " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
 if executable('ag')
   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
@@ -120,6 +118,8 @@ nmap <leader>h :RubyHashConvert<CR>
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
 
+" Ack
+nmap <leader>f :Ack<space>
 " use ag instead of ack, if available
 if executable('ag')
   let g:ackprg = 'ag --nogroup --column'
