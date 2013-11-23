@@ -36,6 +36,7 @@ task :gitconfig do
   `touch #{tmp_gitconfig}`
   `cat gitconfigure/gitconfig.personal >> #{tmp_gitconfig}`
   `cat gitconfigure/gitconfig >> #{tmp_gitconfig}`
+  `cat gitconfigure/gitconfig_18 >> #{tmp_gitconfig}` if has_git_version?("1.8")
 
   if !File.exist?(current_gitconfig)
     mv tmp_gitconfig, current_gitconfig
@@ -151,4 +152,15 @@ end
 
 def hostname
   `hostname -s`.strip
+end
+
+def has_git_version?(desired_version)
+  `git --version`=~ %r{((?:\d+.)*\d+)}
+  version_at_least?(desired_version, $1)
+end
+
+def version_at_least?(desired_version_string, version_string)
+  desired_version = desired_version_string.split('.').map(&:to_i)
+  version = version_string.split('.').map(&:to_i)
+  (version <=> desired_version) >= 0
 end
