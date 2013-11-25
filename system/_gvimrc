@@ -1,3 +1,11 @@
+if has("gui_macvim")
+  " unmap new tab command
+  macmenu &File.New\ Tab key=<nop>
+
+  " unmap open tab command
+  macmenu &File.Open\ Tab\.\.\. key=<nop>
+endif
+
 set guifont=Monaco:h12
 
 set guioptions-=T " Start without the toolbar
