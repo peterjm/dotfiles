@@ -103,7 +103,7 @@ def unlink_system_directory(system_dir)
 end
 
 def make_directory(dir)
-  mkdir_p(dir) unless File.exist?(dir)
+  mkdir_p(dir) unless exists_or_symlinked?(dir)
 end
 
 def directory_empty?(dir)
@@ -115,7 +115,7 @@ def remove_directory(dir)
 end
 
 def link_file(src, dest)
-  if File.exist?(dest) || File.symlink?(dest)
+  if exists_or_symlinked?(dest)
     warn "#{dest} already exists" unless links_to?(dest, src)
   else
     ln_s src, dest
@@ -163,4 +163,8 @@ def version_at_least?(desired_version_string, version_string)
   desired_version = desired_version_string.split('.').map(&:to_i)
   version = version_string.split('.').map(&:to_i)
   (version <=> desired_version) >= 0
+end
+
+def exists_or_symlinked?(path)
+  File.exist?(path) || File.symlink?(path)
 end
