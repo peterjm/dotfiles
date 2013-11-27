@@ -115,7 +115,7 @@ def remove_directory(dir)
 end
 
 def link_file(src, dest)
-  if File.exist? dest
+  if File.exist?(dest) || File.symlink?(dest)
     warn "#{dest} already exists" unless links_to?(dest, src)
   else
     ln_s src, dest
