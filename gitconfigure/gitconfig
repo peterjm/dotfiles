@@ -10,6 +10,7 @@
   type = cat-file -t
   dump = cat-file -p
 [color]
+  ui = true
   diff = auto
   status = auto
   branch = auto
