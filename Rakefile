@@ -123,7 +123,7 @@ def link_file(src, dest)
 end
 
 def links_to?(dest, src)
-  File.exist?(dest) && File.symlink?(dest) && File.readlink(dest) == src
+  File.symlink?(dest) && File.readlink(dest) == src
 end
 
 def unlink_file(file)
