@@ -16,3 +16,6 @@
 [submodule "submodules/ping_status_server"]
 	path = submodules/ping_status_server
 	url = https://gist.github.com/7406618.git
+[submodule "submodules/redis-cli-heroku"]
+	path = submodules/redis-cli-heroku
+	url = https://gist.github.com/7698778.git
