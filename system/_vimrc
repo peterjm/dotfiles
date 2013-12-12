@@ -99,7 +99,7 @@ nmap <space> @q
 "" Plugins
 
 " CtrlP
-nmap <silent> <leader><C-P> :CtrlPClearCache<CR>
+nmap <leader><C-P> :CtrlPClearCache<CR>:CtrlP<CR>
 
 " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
 if executable('ag')
