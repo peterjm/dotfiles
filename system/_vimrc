@@ -48,6 +48,8 @@ set incsearch                   " incremental searching
 set ignorecase                  " searches are case insensitive...
 set smartcase                   " ... unless they contain at least one capital letter
 
+set pastetoggle=<F10>           " F10 to toggle paste mode
+
 set wildignore+=*.gif,*.png,*.jpg,*.jpeg,*.bmp,*.tiff,*.psd,*.svg,*.woff,*.eot,*.ttf
 
 set autoread                    " when a file's content's have changed, automatically load it again
