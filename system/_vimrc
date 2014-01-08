@@ -132,6 +132,9 @@ nmap <leader>h :RubyHashConvert<CR>
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
 
+" refresh the current buffer
+nmap <leader>r :e!<CR>
+
 " Ack
 nmap <leader>f :Ack<space>
 " use ag instead of ack, if available
