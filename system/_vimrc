@@ -69,7 +69,7 @@ if has("autocmd")
   autocmd FileType python set noexpandtab
 
   " Manage whitespace on save, maintaining cursor position
-  function ClearTrailingWhitespace()
+  function! ClearTrailingWhitespace()
     let g:clearwhitespace = exists('g:clearwhitespace') ? g:clearwhitespace : 1
     if g:clearwhitespace
       let save_cursor = getpos(".")
@@ -80,12 +80,23 @@ if has("autocmd")
   endfunction
   autocmd FileType ruby,haml,eruby,javascript,coffee,handlebars,yaml autocmd BufWritePre <buffer> call ClearTrailingWhitespace()
 
+  " Manage whitespace on save, maintaining cursor position
+  function! ConvertTabsToSpaces()
+    let g:tabtospace = exists('g:tabtospace') ? g:tabtospace : 1
+    if g:tabtospace
+      let save_cursor = getpos(".")
+      :silent! %s/\t/  /eg " clear trailing newlines
+      call setpos('.', save_cursor)
+    endif
+  endfunction
+  autocmd FileType ruby,haml,eruby,javascript,coffee,handlebars,yaml autocmd BufWritePre <buffer> call ConvertTabsToSpaces()
+
   " Remember last location in file, but not for commit messages. (see :help last-position-jump)
   autocmd BufReadPost * if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$")
     \| exe "normal! g`\"" | endif
 endif
 
-"" shortcut to re-source .vimrc
+" shortcut to re-source .vimrc
 map :src :source<space>$MYVIMRC
 
 " tab completion
