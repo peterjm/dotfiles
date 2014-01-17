@@ -19,3 +19,6 @@
 [submodule "submodules/redis-cli-heroku"]
 	path = submodules/redis-cli-heroku
 	url = https://gist.github.com/7698778.git
+[submodule "submodules/git-delete-merged"]
+	path = submodules/git-delete-merged
+	url = https://gist.github.com/8481725.git
