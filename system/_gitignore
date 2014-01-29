@@ -7,6 +7,9 @@
 # local POW config
 .powenv
 
+# configuration for Ack
+.ackrc
+
 # configuration for The Silver Searcher
 .agignore
 
