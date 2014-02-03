@@ -135,6 +135,9 @@ let g:html_indent_tags = 'li\|p'
 " refresh the current buffer
 nmap <leader>r :e!<CR>
 
+" magically convert json file to pretty printed
+map <leader>jt :%!python -m json.tool<CR>
+
 " Ack
 nmap <leader>f :Ack<space>
 " use ag instead of ack, if available
