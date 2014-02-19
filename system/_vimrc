@@ -113,9 +113,21 @@ nmap <space> @q
 " CtrlP
 nmap <leader><C-P> :CtrlPClearCache<CR>:CtrlP<CR>
 
-" Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+" Ack
+nmap <leader>f :Ack<space>
+
 if executable('ag')
+  " use ag instead of grep, if available
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " use ag instead of ack, if available
+  let g:ackprg = 'ag --nogroup --column'
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
 endif
 
 " NERDTree
@@ -137,10 +149,3 @@ nmap <leader>r :e!<CR>
 
 " magically convert json file to pretty printed
 map <leader>jt :%!python -m json.tool<CR>
-
-" Ack
-nmap <leader>f :Ack<space>
-" use ag instead of ack, if available
-if executable('ag')
-  let g:ackprg = 'ag --nogroup --column'
-endif
