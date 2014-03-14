@@ -21,7 +21,6 @@ Bundle 'nono/vim-handlebars'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'jnwhiteh/vim-golang'
 Bundle 'VimClojure'
-Bundle 'jeffkreeftmeijer/vim-numbertoggle'
 
 " Colour Schemes
 Bundle 'tpope/vim-vividchalk'
