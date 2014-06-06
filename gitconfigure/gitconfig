@@ -20,3 +20,5 @@
   whitespace = strip
 [pull]
   rebase = true
+[merge]
+  conflictstyle = diff3
