@@ -22,3 +22,6 @@
 [submodule "submodules/git-delete-merged"]
 	path = submodules/git-delete-merged
 	url = https://gist.github.com/8481725.git
+[submodule "submodules/find-duplicate-files"]
+	path = submodules/find-duplicate-files
+	url = https://gist.github.com/a54ceaec6755e6f62998.git
