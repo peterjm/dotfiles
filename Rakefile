@@ -1,4 +1,4 @@
-task :default => [:install_submodules, :gitconfig, :link, :install_vundles]
+task :default => [:install_submodules, :build_matcher, :gitconfig, :link, :install_vundles]
 task :update => [:update_submodules, :update_vundles]
 task :clean => [:delete_vundles, :unlink]
 
@@ -23,6 +23,10 @@ task :delete_vundles do
     next if File.symlink?(vundle)
     rm_r vundle
   end
+end
+
+task :build_matcher do
+  sh "cd submodules/matcher && make"
 end
 
 task :gitconfig do
