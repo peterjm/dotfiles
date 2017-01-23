@@ -1,4 +1,5 @@
 task default: %i[
+  silver_searcher
   install_submodules
   build_matcher
   gitconfig
@@ -15,6 +16,10 @@ task clean: %i[
   delete_vundles
   unlink
 ]
+
+task :silver_searcher do
+  install_system_package('the_silver_searcher')
+end
 
 task :install_submodules do
   sh "git submodule update --init"
@@ -185,4 +190,16 @@ end
 
 def exists_or_symlinked?(path)
   File.exist?(path) || File.symlink?(path)
+end
+
+def install_system_package(package_name)
+  if `which brew` && $?.success?
+    if `brew list`.split.include?(package_name)
+      puts "#{package_name} already installed"
+    else
+      sh "brew install #{package_name}"
+    end
+  else
+    puts "ERROR: brew doesn't exist; couldn't install '#{package_name}'"
+  end
 end
