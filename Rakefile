@@ -18,9 +18,14 @@ task clean: %i[
 ]
 
 task system_packages: %i[
+  git
   bash_completion
   silver_searcher
 ]
+
+task :git do
+  install_system_package('git')
+end
 
 task :bash_completion do
   install_system_package('bash-completion')
