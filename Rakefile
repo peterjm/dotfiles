@@ -1,5 +1,5 @@
 task default: %i[
-  silver_searcher
+  system_packages
   install_submodules
   build_matcher
   gitconfig
@@ -16,6 +16,15 @@ task clean: %i[
   delete_vundles
   unlink
 ]
+
+task system_packages: %i[
+  bash_completion
+  silver_searcher
+]
+
+task :bash_completion do
+  install_system_package('bash-completion')
+end
 
 task :silver_searcher do
   install_system_package('the_silver_searcher')
