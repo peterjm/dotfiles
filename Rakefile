@@ -90,8 +90,8 @@ def system_directories
   [
     "system",
     dropbox_path("system/common"),
-    dropbox_path("system/#{hostname}")
-  ]
+    (dropbox_path("system/#{computer_name}") unless computer_name.nil?)
+  ].reject(&:nil?)
 end
 
 def each_system_file(system_dir)
@@ -173,8 +173,16 @@ def dropbox_path(path)
   home_path File.join("Dropbox", path)
 end
 
+def computer_name
+  prompt_host || hostname
+end
+
+def prompt_host
+  presence(ENV['PROMPT_HOST'])
+end
+
 def hostname
-  `hostname -s`.strip
+  presence(`hostname -s`)
 end
 
 def has_git_version?(desired_version)
@@ -202,4 +210,10 @@ def install_system_package(package_name)
   else
     puts "ERROR: brew doesn't exist; couldn't install '#{package_name}'"
   end
+end
+
+def presence(string)
+  return nil if string.nil?
+  string = string.strip
+  string.empty? ? nil : string
 end
