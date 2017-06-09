@@ -150,7 +150,7 @@ if executable('matcher')
 
     return split(system(cmd), "\n")
   endfunction
-end
+endif
 
 " NERDTree
 nmap <silent> <C-D> :NERDTreeToggle<CR>
