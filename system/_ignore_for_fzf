@@ -1,0 +1,13 @@
+# also update the wildignore list in _vimrc
+*.gif
+*.png
+*.jpg
+*.jpeg
+*.bmp
+*.tiff
+*.psd
+*.svg
+*.woff
+*.woff2
+*.eot
+*.ttf

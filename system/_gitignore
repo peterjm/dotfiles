@@ -12,6 +12,7 @@
 
 # configuration for The Silver Searcher
 .agignore
+.ignore
 
 # vendored gems
 .bundle/

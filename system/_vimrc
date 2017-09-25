@@ -49,7 +49,8 @@ set smartcase                   " ... unless they contain at least one capital l
 
 set pastetoggle=<F10>           " F10 to toggle paste mode
 
-set wildignore+=*.gif,*.png,*.jpg,*.jpeg,*.bmp,*.tiff,*.psd,*.svg,*.woff,*.eot,*.ttf
+" also update the list in .ignore_for_fzf
+set wildignore+=*.gif,*.png,*.jpg,*.jpeg,*.bmp,*.tiff,*.psd,*.svg,*.woff,*.woff2,*.eot,*.ttf
 
 set autoread                    " when a file's content's have changed, automatically load it again
 
@@ -121,6 +122,9 @@ if executable('ag')
   let g:ackprg = 'ag --nogroup --column'
 endif
 
+if executable('fzf')
+  set rtp+=/usr/local/opt/fzf
+  nmap <C-P> :Files<CR>
 endif
 
 " NERDTree

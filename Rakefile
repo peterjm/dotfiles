@@ -21,6 +21,7 @@ task system_packages: %i[
   git
   bash_completion
   silver_searcher
+  fzf
 ]
 
 task :git do
@@ -33,6 +34,10 @@ end
 
 task :silver_searcher do
   install_system_package('the_silver_searcher')
+end
+
+task :fzf do
+  install_system_package('fzf')
 end
 
 task :install_submodules do
@@ -215,7 +220,7 @@ def exists_or_symlinked?(path)
 end
 
 def install_system_package(package_name)
-  if `which brew` && $?.success?
+  unless `which brew`.empty?
     if `brew list`.split.include?(package_name)
       puts "#{package_name} already installed"
     else
