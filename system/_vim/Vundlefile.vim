@@ -9,7 +9,6 @@ Bundle 'gmarik/vundle'
 
 " My Bundles here:
 Bundle 'mileszs/ack.vim'
-Bundle 'kien/ctrlp.vim'
 Bundle 'vim-ruby/vim-ruby'
 Bundle 'tpope/vim-rails'
 Bundle 'scrooloose/nerdtree'
