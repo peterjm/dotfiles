@@ -22,6 +22,7 @@ Bundle 'nono/vim-handlebars'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'jnwhiteh/vim-golang'
 Bundle 'VimClojure'
+Bundle 'rust-lang/rust.vim'
 
 " Colour Schemes
 Bundle 'tpope/vim-vividchalk'
