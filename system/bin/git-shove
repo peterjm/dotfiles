@@ -1,0 +1,10 @@
+#!/bin/bash
+
+CURRENT_BRANCH=`git branch | awk '/^\*/ { print $2 }'`
+if [ "$CURRENT_BRANCH" == "master" ]; then
+  echo "On master; not going to force push"
+  fail
+else
+  git push --force-with-lease
+fi
+
