@@ -18,9 +18,15 @@
   excludesfile = ~/.gitignore
 [apply]
   whitespace = strip
+[push]
+  default = simple
 [pull]
   rebase = true
 [merge]
   conflictstyle = diff3
 [fetch]
   prune = true
+[diff]
+  algorithm = patience
+[protocol]
+  version = 2
