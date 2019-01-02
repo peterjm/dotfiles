@@ -49,11 +49,11 @@ task :update_submodules do
 end
 
 task :install_vundles do
-  sh "vim +BundleInstall +qall"
+  sh "vim +PluginInstall +qall"
 end
 
 task :update_vundles do
-  sh "vim +BundleInstall! +qall"
+  sh "vim +PluginInstall! +qall"
 end
 
 task :delete_vundles do
