@@ -83,7 +83,7 @@ task :gitconfig do
     mv tmp_gitconfig, current_gitconfig
   elsif !system("diff -q #{tmp_gitconfig} #{current_gitconfig}")
     system("diff #{current_gitconfig} #{tmp_gitconfig}")
-    old_gitconfig = File.join("gitconfigure", "gitconfig.old")
+    old_gitconfig = non_existing_filename(File.join("gitconfigure", "gitconfig.old"))
     warn "moved existing #{current_gitconfig} to #{old_gitconfig}"
     mv current_gitconfig, old_gitconfig
     mv tmp_gitconfig, current_gitconfig
@@ -201,6 +201,17 @@ end
 
 def hostname
   presence(`hostname -s`)
+end
+
+def non_existing_filename(base)
+  return base unless File.exist?(base)
+
+  suffix = 2
+  loop do
+    name = [base, suffix].join('.')
+    return name unless File.exist?(name)
+    suffix += 1
+  end
 end
 
 def has_git_version?(desired_version)
