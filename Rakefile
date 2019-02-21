@@ -107,9 +107,9 @@ end
 def system_directories
   [
     "system",
-    dropbox_path("system/common"),
-    (dropbox_path("system/#{computer_name}") unless computer_name.nil?)
-  ].reject(&:nil?)
+    dropbox_path("dotfiles", "system", "common"),
+    (dropbox_path("dotfiles", "system", computer_name) unless computer_name.nil?)
+  ].compact
 end
 
 def each_system_file(system_dir)
@@ -187,8 +187,8 @@ def home_path(path)
   File.join ENV['HOME'], path
 end
 
-def dropbox_path(path)
-  home_path File.join("Dropbox", path)
+def dropbox_path(*path)
+  home_path File.join("Dropbox", *path)
 end
 
 def computer_name
