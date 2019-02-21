@@ -1,32 +1,31 @@
-[alias]
-  s = status
-  stats = status
-  ci = commit
-  br = branch
-  co = checkout
-  d = diff
-  lg = log -p
-  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-  type = cat-file -t
-  dump = cat-file -p
-[color]
-  ui = true
-  diff = auto
-  status = auto
-  branch = auto
-[core]
-  excludesfile = ~/.gitignore
-[apply]
-  whitespace = strip
-[push]
-  default = simple
-[pull]
-  rebase = true
-[merge]
-  conflictstyle = diff3
-[fetch]
-  prune = true
-[diff]
-  algorithm = patience
-[protocol]
-  version = 2
+alias.s status
+alias.stats status
+alias.ci commit
+alias.br branch
+alias.co checkout
+alias.d diff
+alias.lg "log -p"
+alias.hist "log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short"
+alias.type "cat-file -t"
+alias.dump "cat-file -p"
+
+color.ui true
+color.diff auto
+color.status auto
+color.branch auto
+
+core.excludesfile ~/.gitignore
+
+apply.whitespace strip
+
+push.default simple
+
+pull.rebase true
+
+merge.conflictstyle diff3
+
+fetch.prune true
+
+diff.algorithm patience
+
+protocol.version 2
