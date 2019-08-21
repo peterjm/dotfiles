@@ -23,6 +23,8 @@ Bundle 'kchmck/vim-coffee-script'
 Bundle 'jnwhiteh/vim-golang'
 Bundle 'VimClojure'
 Bundle 'rust-lang/rust.vim'
+Bundle 'leafgarland/typescript-vim'
+Bundle 'peitalin/vim-jsx-typescript'
 
 " Colour Schemes
 Bundle 'tpope/vim-vividchalk'
