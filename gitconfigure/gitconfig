@@ -15,6 +15,7 @@ color.status auto
 color.branch auto
 
 core.excludesfile ~/.gitignore
+core.commitGraph true
 
 apply.whitespace strip
 
@@ -29,3 +30,5 @@ fetch.prune true
 diff.algorithm patience
 
 protocol.version 2
+
+gc.writeCommitGraph true
