@@ -147,3 +147,10 @@ nmap <leader>r :e!<CR>
 
 " magically convert json file to pretty printed
 map <leader>jt :%!python -m json.tool<CR>
+
+" convenient mappings for vim-test
+nmap <silent> t<C-n> :TestNearest<CR>
+nmap <silent> t<C-f> :TestFile<CR>
+nmap <silent> t<C-s> :TestSuite<CR>
+nmap <silent> t<C-l> :TestLast<CR>
+nmap <silent> t<C-g> :TestVisit<CR>
