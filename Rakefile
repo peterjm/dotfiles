@@ -1,5 +1,6 @@
 task default: %i[
   system_packages
+  git_prompt
   install_submodules
   build_matcher
   gitconfig
@@ -65,6 +66,10 @@ end
 
 task :build_matcher do
   sh "cd submodules/matcher && make"
+end
+
+task :git_prompt do
+  sh "curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > system/_zsh/020_git_prompt.sh"
 end
 
 task :gitconfig do
