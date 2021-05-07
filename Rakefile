@@ -21,6 +21,7 @@ task clean: %i[
 task system_packages: %i[
   git
   bash_completion
+  zsh_completion
   silver_searcher
   fzf
 ]
@@ -31,6 +32,10 @@ end
 
 task :bash_completion do
   install_system_package('bash-completion')
+end
+
+task :zsh_completion do
+  install_system_package('zsh-completions')
 end
 
 task :silver_searcher do
