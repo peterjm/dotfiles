@@ -14,6 +14,9 @@
 .agignore
 .ignore
 
+# used by git-refresh
+.git-main-branch
+
 # vendored gems
 .bundle/
 

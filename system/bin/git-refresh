@@ -1,0 +1,20 @@
+#!/bin/bash
+
+CURRENT_BRANCH=`git branch | awk '/^\*/ { print $2 }'`
+
+if [ -n "$1" ]; then
+  MAIN_BRANCH=$1
+elif [ -f .git-main-branch ]; then
+  MAIN_BRANCH=`cat .git-main-branch`
+else
+  MAIN_BRANCH="master"
+fi
+
+if [ "$CURRENT_BRANCH" == "$MAIN_BRANCH" ]; then
+  git pull
+else
+  git checkout $MAIN_BRANCH
+  git pull
+  git checkout $CURRENT_BRANCH
+  git rebase $MAIN_BRANCH
+fi
