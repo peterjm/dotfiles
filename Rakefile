@@ -1,7 +1,10 @@
+require './src/curl_download'
+
 def home_path(path)
   File.join ENV['HOME'], path
 end
 
+VIM_PLUG_LOCATION = home_path(".vim/autoload/plug.vim")
 GIT_PROMPT_LOCATION = home_path(".zsh/020_git_prompt.sh")
 
 task default: %i[
@@ -10,17 +13,21 @@ task default: %i[
   install_submodules
   gitconfig
   link
-  install_vundles
+  download_vim_plug
+  install_vim_plugins
 ]
 
 task update: %i[
   update_submodules
-  update_vundles
+  update_vim_plugins
 ]
 
 task clean: %i[
   delete_git_prompt
-  delete_vundles
+  delete_vim_plug
+  delete_git_prompt
+  delete_vim_plug
+  delete_vim_plugins
   unlink
 ]
 
@@ -55,23 +62,32 @@ task :update_submodules do
   sh "git submodule foreach git pull origin master"
 end
 
-task :install_vundles do
-  sh "vim +PluginInstall +qall"
+task :download_vim_plug do
+  CurlDownload.new(
+    url: "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim",
+    dest: VIM_PLUG_LOCATION
+  ).install
 end
 
-task :update_vundles do
-  sh "vim +PluginInstall! +qall"
+task :delete_vim_plug do
+  rm VIM_PLUG_LOCATION
 end
 
-task :delete_vundles do
-  Dir.glob(home_path(".vim/bundle/**")) do |vundle|
-    next if File.symlink?(vundle)
-    rm_r vundle
-  end
+task :install_vim_plugins do
+  sh "vim +'PlugInstall --sync' +qa"
+end
+
+task :update_vim_plugins => :install_vim_plugins
+
+task :delete_vim_plugins do
+  rm_r home_path(".vim/plugged/**")
 end
 
 task :download_git_prompt do
-  sh "curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > #{GIT_PROMPT_LOCATION}"
+  CurlDownload.new(
+    url: "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh",
+    dest: GIT_PROMPT_LOCATION
+  ).install
 end
 
 task :delete_git_prompt do

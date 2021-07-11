@@ -1,5 +1,30 @@
 set nocompatible
-source $HOME/.vim/Vundlefile.vim
+
+" Plugins will be downloaded under the specified directory.
+call plug#begin('~/.vim/plugged')
+
+" Declare the list of plugins.
+Plug 'tpope/vim-sensible'
+Plug 'mileszs/ack.vim'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-rails'
+Plug 'janko/vim-test'
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdcommenter'
+Plug 'peterjm/gitignore.vim'
+Plug 'vim-scripts/localvimrc'
+Plug 'tpope/vim-fugitive'
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
+
+" Colour Schemes
+Plug 'nanotech/jellybeans.vim'
+
+" List ends here. Plugins become visible to Vim after this call.
+call plug#end()
+
 filetype plugin indent on       " load file type plugins + indentation
 
 syntax enable                   " enable syntax highlighting
