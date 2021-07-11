@@ -4,9 +4,20 @@ class SystemInstaller
   class << self
     def for(package_name)
       if ENV['SPIN']
-        AptGetInstaller.new(package_name)
+        spin_installer_for(package_name)
       elsif !`which brew`.empty?
         BrewInstaller.new(package_name)
+      else
+        NoInstaller.new(package_name)
+      end
+    end
+
+    def spin_installer_for(package_name)
+      case package_name
+      when "bash-completion"
+        AptGetInstaller.new(package_name)
+      when "the_silver_searcher"
+        AptGetInstaller.new("silversearcher-ag")
       else
         NoInstaller.new(package_name)
       end
@@ -30,7 +41,7 @@ end
 
 class NoInstaller < SystemInstaller
   def check_and_install
-    puts "ERROR: no system installer; couldn't install '#{package_name}'"
+    puts "no system installer available for '#{package_name}'; couldn't install"
   end
 end
 
@@ -45,14 +56,6 @@ class BrewInstaller < SystemInstaller
 end
 
 class AptGetInstaller < SystemInstaller
-  PACKAGE_NAMES = {
-    'the_silver_searcher' => 'silversearcher-ag',
-  }
-
-  def initialize(package_name)
-    super(system_package_name(package_name))
-  end
-
   def installed?
     `apt-cache policy #{package_name}` !~ /Installed: \(none\)/
   end
