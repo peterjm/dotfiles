@@ -1,6 +1,12 @@
+def home_path(path)
+  File.join ENV['HOME'], path
+end
+
+GIT_PROMPT_LOCATION = home_path(".zsh/020_git_prompt.sh")
+
 task default: %i[
   system_packages
-  git_prompt
+  download_git_prompt
   install_submodules
   gitconfig
   link
@@ -13,6 +19,7 @@ task update: %i[
 ]
 
 task clean: %i[
+  delete_git_prompt
   delete_vundles
   unlink
 ]
@@ -63,8 +70,12 @@ task :delete_vundles do
   end
 end
 
-task :git_prompt do
-  sh "curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > system/_zsh/020_git_prompt.sh"
+task :download_git_prompt do
+  sh "curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > #{GIT_PROMPT_LOCATION}"
+end
+
+task :delete_git_prompt do
+  rm GIT_PROMPT_LOCATION
 end
 
 task :gitconfig do
@@ -205,10 +216,6 @@ end
 
 def expanded_path(path)
   File.expand_path(path, File.dirname(__FILE__))
-end
-
-def home_path(path)
-  File.join ENV['HOME'], path
 end
 
 def dropbox_path(*path)
