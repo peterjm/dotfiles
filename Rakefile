@@ -61,19 +61,19 @@ task system_packages: %i[
 ]
 
 task :bash_completion do
-  SystemInstaller.current.check_and_install('bash-completion')
+  SystemInstaller.for("bash-completion").check_and_install
 end
 
 task :zsh_completion do
-  SystemInstaller.current.check_and_install('zsh-completions')
+  SystemInstaller.for("zsh-completions").check_and_install
 end
 
 task :silver_searcher do
-  SystemInstaller.current.check_and_install('the_silver_searcher')
+  SystemInstaller.for("the_silver_searcher").check_and_install
 end
 
 task :fzf do
-  SystemInstaller.current.check_and_install('fzf')
+  SystemInstaller.for("fzf").check_and_install
 end
 
 task :download_vim_plug do

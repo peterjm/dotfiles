@@ -2,43 +2,44 @@ class SystemInstaller
   include FileUtils::Verbose
 
   class << self
-    def current
+    def for(package_name)
       if ENV['SPIN']
-        AptGetInstaller.new
+        AptGetInstaller.new(package_name)
       elsif !`which brew`.empty?
-        BrewInstaller.new
+        BrewInstaller.new(package_name)
       else
-        NoInstaller.new
+        NoInstaller.new(package_name)
       end
     end
   end
 
-  def check_and_install(name)
-    package_name = system_package_name(name)
-    if installed?(package_name)
-      puts "#{package_name} already installed"
-    else
-      install(package_name)
-    end
+  attr_reader :package_name
+
+  def initialize(package_name)
+    @package_name = package_name
   end
 
-  def system_package_name(name)
-    name
+  def check_and_install
+    if installed?
+      puts "#{package_name} already installed"
+    else
+      install
+    end
   end
 end
 
 class NoInstaller < SystemInstaller
-  def check_and_install(package_name)
+  def check_and_install
     puts "ERROR: no system installer; couldn't install '#{package_name}'"
   end
 end
 
 class BrewInstaller < SystemInstaller
-  def installed?(package_name)
+  def installed?
     `brew list`.split.include?(package_name)
   end
 
-  def install(package_name)
+  def install
     sh "brew install #{package_name}"
   end
 end
@@ -48,11 +49,15 @@ class AptGetInstaller < SystemInstaller
     'the_silver_searcher' => 'silversearcher-ag',
   }
 
-  def installed?(package_name)
+  def initialize(package_name)
+    super(system_package_name(package_name))
+  end
+
+  def installed?
     `apt-cache policy #{package_name}` !~ /Installed: \(none\)/
   end
 
-  def install(package_name)
+  def install
     sh "sudo apt-get install -y #{package_name}"
   end
 
