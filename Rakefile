@@ -19,16 +19,11 @@ task clean: %i[
 ]
 
 task system_packages: %i[
-  git
   bash_completion
   zsh_completion
   silver_searcher
   fzf
 ]
-
-task :git do
-  install_system_package('git')
-end
 
 task :bash_completion do
   install_system_package('bash-completion')
