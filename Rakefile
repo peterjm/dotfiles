@@ -2,7 +2,6 @@ task default: %i[
   system_packages
   git_prompt
   install_submodules
-  build_matcher
   gitconfig
   link
   install_vundles
@@ -62,10 +61,6 @@ task :delete_vundles do
     next if File.symlink?(vundle)
     rm_r vundle
   end
-end
-
-task :build_matcher do
-  sh "cd submodules/matcher && make"
 end
 
 task :git_prompt do

@@ -13,9 +13,6 @@
 [submodule "submodules/find-duplicate-files"]
 	path = submodules/find-duplicate-files
 	url = https://gist.github.com/a54ceaec6755e6f62998.git
-[submodule "submodules/matcher"]
-	path = submodules/matcher
-	url = https://github.com/burke/matcher.git
 [submodule "submodules/change-terminal-style"]
 	path = submodules/change-terminal-style
 	url = https://gist.github.com/3bd8911334802d0916245779a1c49476.git
