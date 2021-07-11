@@ -27,7 +27,7 @@ DOWNLOAD_GIT_FREEZE_PROMPT = CurlDownload.new(
 
 task default: %i[
   system_packages
-  download_git_freeze
+  install_git_freeze
   download_git_prompt
   gitconfig
   link
@@ -41,7 +41,7 @@ task update: %i[
 
 task clean: %i[
   delete_git_prompt
-  delete_git_freeze
+  uninstall_git_freeze
   delete_vim_plug
   delete_vim_plugins
   unlink
@@ -102,7 +102,7 @@ task install_git_freeze: %i[
   download_git_freeze_prompt
 ]
 
-task install_git_freeze: %i[
+task uninstall_git_freeze: %i[
   delete_git_freeze
   delete_git_thaw
   delete_git_freeze_prompt
