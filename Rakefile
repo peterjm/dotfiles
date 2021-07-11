@@ -4,13 +4,31 @@ def home_path(path)
   File.join ENV['HOME'], path
 end
 
-VIM_PLUG_LOCATION = home_path(".vim/autoload/plug.vim")
-GIT_PROMPT_LOCATION = home_path(".zsh/020_git_prompt.sh")
+DOWNLOAD_VIM_PLUG = CurlDownload.new(
+  url: "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim",
+  dest: home_path(".vim/autoload/plug.vim")
+)
+DOWNLOAD_GIT_PROMPT = CurlDownload.new(
+  url: "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh",
+  dest: home_path(".zsh/020_git_prompt.sh")
+)
+DOWNLOAD_GIT_FREEZE = CurlDownload.new(
+  url: "https://raw.githubusercontent.com/peterjm/git-freeze/master/git-freeze",
+  dest: home_path("bin/git-freeze")
+)
+DOWNLOAD_GIT_THAW = CurlDownload.new(
+  url: "https://raw.githubusercontent.com/peterjm/git-freeze/master/git-thaw",
+  dest: home_path("bin/git-thaw")
+)
+DOWNLOAD_GIT_FREEZE_PROMPT = CurlDownload.new(
+  url: "https://raw.githubusercontent.com/peterjm/git-freeze/master/git-freeze.sh",
+  dest: home_path("lib/git_freeze.sh")
+)
 
 task default: %i[
   system_packages
+  download_git_freeze
   download_git_prompt
-  install_submodules
   gitconfig
   link
   download_vim_plug
@@ -18,14 +36,12 @@ task default: %i[
 ]
 
 task update: %i[
-  update_submodules
   update_vim_plugins
 ]
 
 task clean: %i[
   delete_git_prompt
-  delete_vim_plug
-  delete_git_prompt
+  delete_git_freeze
   delete_vim_plug
   delete_vim_plugins
   unlink
@@ -54,23 +70,12 @@ task :fzf do
   install_system_package('fzf')
 end
 
-task :install_submodules do
-  sh "git submodule update --init"
-end
-
-task :update_submodules do
-  sh "git submodule foreach git pull origin master"
-end
-
 task :download_vim_plug do
-  CurlDownload.new(
-    url: "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim",
-    dest: VIM_PLUG_LOCATION
-  ).install
+  DOWNLOAD_VIM_PLUG.install
 end
 
 task :delete_vim_plug do
-  rm VIM_PLUG_LOCATION
+  DOWNLOAD_VIM_PLUG.clean
 end
 
 task :install_vim_plugins do
@@ -80,18 +85,51 @@ end
 task :update_vim_plugins => :install_vim_plugins
 
 task :delete_vim_plugins do
-  rm_r home_path(".vim/plugged/**")
+  rm_rf home_path(".vim/plugged")
 end
 
 task :download_git_prompt do
-  CurlDownload.new(
-    url: "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh",
-    dest: GIT_PROMPT_LOCATION
-  ).install
+  DOWNLOAD_GIT_PROMPT.install
 end
 
 task :delete_git_prompt do
-  rm GIT_PROMPT_LOCATION
+  DOWNLOAD_GIT_PROMPT.clean
+end
+
+task install_git_freeze: %i[
+  download_git_freeze
+  download_git_thaw
+  download_git_freeze_prompt
+]
+
+task install_git_freeze: %i[
+  delete_git_freeze
+  delete_git_thaw
+  delete_git_freeze_prompt
+]
+
+task :download_git_freeze do
+  DOWNLOAD_GIT_FREEZE.install
+end
+
+task :download_git_thaw do
+  DOWNLOAD_GIT_THAW.install
+end
+
+task :download_git_freeze_prompt do
+  DOWNLOAD_GIT_FREEZE_PROMPT.install
+end
+
+task :delete_git_freeze do
+  DOWNLOAD_GIT_FREEZE.clean
+end
+
+task :delete_git_thaw do
+  DOWNLOAD_GIT_THAW.clean
+end
+
+task :delete_git_freeze_prompt do
+  DOWNLOAD_GIT_FREEZE_PROMPT.clean
 end
 
 task :gitconfig do

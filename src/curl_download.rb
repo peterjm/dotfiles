@@ -21,6 +21,10 @@ class CurlDownload
   end
 
   def download
-    sh "curl -fLo #{dest} #{url}"
+    sh "curl -fLo #{dest} --create-dirs #{url}"
+  end
+
+  def clean
+    rm_f dest
   end
 end

@@ -1,3 +1,0 @@
-[submodule "submodules/git-freeze"]
-	path = submodules/git-freeze
-	url = https://github.com/peterjm/git-freeze.git
