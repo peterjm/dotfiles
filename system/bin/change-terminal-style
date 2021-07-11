@@ -1,1 +1,8 @@
-../../submodules/change-terminal-style/change-terminal-style
+#!/usr/bin/env osascript
+
+on run argv
+  set terminal_style to item 1 of argv
+  tell application "Terminal"
+     set current settings of window 1 to settings set terminal_style
+  end tell
+end

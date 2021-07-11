@@ -1,1 +1,128 @@
-../../submodules/find-duplicate-files/find-duplicate-files
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'digest'
+
+class ProgramOptions
+  def self.parse(args)
+    options = {
+      delete: false,
+      directories: args
+    }
+    parser = OptionParser.new do |opts|
+      opts.banner = "Usage: find_duplicates.rb [options] *directories"
+
+      opts.on("-d", "--[no-]delete", "Delete files") do |d|
+        options[:delete] = d
+      end
+
+      opts.on_tail("-h", "--help", "Show this message") do
+        puts opts
+        exit
+      end
+    end
+    parser.parse!(args)
+
+    unless options[:directories].any?
+      puts parser
+      exit
+    end
+
+    options
+  end
+end
+
+def hash_with_array_default
+  Hash.new do |h, k|
+    h[k] = []
+  end
+end
+
+def walktree(dir)
+  Dir.glob(File.join(dir, '**/*')) do |f|
+    yield f if File.file?(f)
+  end
+end
+
+def find_duplicates(files)
+  return [] if files.length <= 1
+
+  files_by_digest = hash_with_array_default
+
+  files.each do |file|
+    digest = yield file
+    files_by_digest[digest] << file
+  end
+
+  files_by_digest.select! do |digest, files_for_digest|
+    files_for_digest.size > 1
+  end
+
+  files_by_digest.values
+end
+
+def print_group(files)
+  files.each do |file|
+    puts file
+  end
+  puts
+end
+
+def handle_duplicates(duplicates, delete_duplicates=false)
+  puts "Found set of #{duplicates.size} duplicates:"
+  duplicates = duplicates.sort_by{|f| File.ctime(f)}
+  original = duplicates.shift
+  puts "Original: #{original}"
+  duplicates.each do |file|
+    if delete_duplicates
+      puts "Deleting: #{file}"
+      File.delete(file)
+    else
+      puts "Duplicate: #{file}"
+    end
+  end
+end
+
+def main
+  options = ProgramOptions.parse(ARGV)
+
+  directories = options[:directories]
+  files = []
+
+  directories.each do |dir|
+    puts "Scanning #{dir}"
+    walktree(dir) do |file|
+      files << file
+    end
+  end
+
+  files = find_duplicates(files) do |file|
+    size = File.size(file)
+    size > 100 ? size : nil
+  end
+  puts "Found #{files.size} sets of files matched by size..."
+  return unless files.any?
+
+  files = files.map do |group|
+    find_duplicates(group) do |file|
+      Digest::MD5.digest(File.read(file, 1024))
+    end
+  end.flatten(1)
+  puts "Found #{files.size} sets of files matched by initial digest..."
+  return unless files.any?
+
+  files = files.map do |group|
+    find_duplicates(group) do |file|
+      Digest::MD5.file(file).digest
+    end
+  end.flatten(1)
+  puts "Found #{files.size} sets of duplicate files..."
+  return unless files.any?
+
+  files.each do |duplicates|
+    puts
+    handle_duplicates(duplicates, options[:delete])
+  end
+end
+
+main

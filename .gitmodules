@@ -1,15 +1,3 @@
 [submodule "submodules/git-freeze"]
 	path = submodules/git-freeze
 	url = https://github.com/peterjm/git-freeze.git
-[submodule "submodules/git-push-remote"]
-	path = submodules/git-push-remote
-	url = https://gist.github.com/7381172.git
-[submodule "submodules/git-delete-merged"]
-	path = submodules/git-delete-merged
-	url = https://gist.github.com/8481725.git
-[submodule "submodules/find-duplicate-files"]
-	path = submodules/find-duplicate-files
-	url = https://gist.github.com/a54ceaec6755e6f62998.git
-[submodule "submodules/change-terminal-style"]
-	path = submodules/change-terminal-style
-	url = https://gist.github.com/3bd8911334802d0916245779a1c49476.git

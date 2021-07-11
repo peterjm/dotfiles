@@ -1,1 +1,17 @@
-../../submodules/git-delete-merged/git-delete-merged
+#!/bin/bash
+
+CURRENT_BRANCH=`git branch | awk '/^\*/ { print $2 }'`
+
+if [ -f .git-main-branch ]; then
+  MAIN_BRANCH=`cat .git-main-branch`
+else
+  MAIN_BRANCH="master"
+fi
+
+if [ "$CURRENT_BRANCH" == "$MAIN_BRANCH" ]; then
+  git branch --merged | grep -v "\*" | xargs git branch -d
+elif [ "$1" == "--force" ]; then
+  git branch --merged | grep -v "\*" | grep -v "$MAIN_BRANCH" | xargs git branch -d
+else
+  echo "Only runnable on $MAIN_BRANCH branch (use --force to override)"
+fi

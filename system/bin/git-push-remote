@@ -1,1 +1,16 @@
-../../submodules/git-push-remote/git-push-remote
+#!/bin/bash
+
+current_git_branch () {
+  git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
+}
+BRANCH_NAME=$(current_git_branch)
+
+UPSTREAM_REMOTE=`git config branch.$BRANCH_NAME.remote`
+UPSTREAM_BRANCH=`git config branch.$BRANCH_NAME.merge`
+if [ -z "$UPSTREAM_BRANCH" ]; then
+  git config branch.$BRANCH_NAME.remote origin
+  git config branch.$BRANCH_NAME.merge $BRANCH_NAME
+  git push -u origin $BRANCH_NAME
+else
+  echo "Branch $BRANCH_NAME is already configured to push to $UPSTREAM_REMOTE:$UPSTREAM_BRANCH"
+fi
