@@ -1,5 +1,8 @@
+require './src/system_directories'
 require './src/curl_download'
 require './src/system_installer'
+require './src/git_configurator'
+require './src/file_linker'
 
 def home_path(path)
   File.join ENV['HOME'], path
@@ -134,34 +137,7 @@ task :delete_git_freeze_prompt do
 end
 
 task :gitconfig do
-  current_gitconfig = "system/_gitconfig"
-  tmp_gitconfig = "gitconfig.tmp"
-
-  `touch #{tmp_gitconfig}`
-
-  gitconfig_files.each do |file|
-    File.read(file).lines.map(&:strip).reject(&:empty?).each do |config_line|
-      set_git_config(tmp_gitconfig, config_line)
-    end
-  end
-
-  unless confirm_git_config(tmp_gitconfig, 'user.name', 'user.email', 'github.user')
-    warn "create a gitconfig in Dropbox/dotfiles/gitconfigure with system-specific settings"
-    `rm #{tmp_gitconfig}`
-    return
-  end
-
-  if !File.exist?(current_gitconfig)
-    mv tmp_gitconfig, current_gitconfig
-  elsif !system("diff -q #{tmp_gitconfig} #{current_gitconfig}")
-    system("diff #{current_gitconfig} #{tmp_gitconfig}")
-    old_gitconfig = non_existing_filename("gitconfig.old")
-    warn "moved existing #{current_gitconfig} to #{old_gitconfig}"
-    mv current_gitconfig, old_gitconfig
-    mv tmp_gitconfig, current_gitconfig
-  else
-    `rm #{tmp_gitconfig}`
-  end
+  GitConfigurator.new.setup
 end
 
 task :link do
@@ -176,30 +152,8 @@ task :unlink do
   end
 end
 
-def set_git_config(filename, setting_and_value)
-  `git config -f #{filename} #{setting_and_value}`
-end
-
-def confirm_git_config(filename, *settings)
-  settings.each do |setting|
-    unless `git config -f #{filename} #{setting}`
-      warn "git configuration for '#{setting}' is missing"
-    end
-  end
-end
-
-def gitconfig_files
-  system_directories("gitconfigure")
-    .map { |path| File.join(path, "gitconfig") }
-    .select { |file| File.exist?(file) }
-end
-
 def system_directories(path = "system")
-  [
-    path,
-    dropbox_path("dotfiles", path, "common"),
-    (dropbox_path("dotfiles", path, computer_name) unless computer_name.nil?)
-  ].compact
+  SystemDirectories.new(path).directories
 end
 
 def each_system_file(system_dir)
@@ -273,22 +227,6 @@ def expanded_path(path)
   File.expand_path(path, File.dirname(__FILE__))
 end
 
-def dropbox_path(*path)
-  home_path File.join("Dropbox", *path)
-end
-
-def computer_name
-  prompt_host || hostname
-end
-
-def prompt_host
-  presence(ENV['PROMPT_HOST'])
-end
-
-def hostname
-  presence(`hostname -s`)
-end
-
 def non_existing_filename(base)
   return base unless File.exist?(base)
 
@@ -313,10 +251,4 @@ end
 
 def exists_or_symlinked?(path)
   File.exist?(path) || File.symlink?(path)
-end
-
-def presence(string)
-  return nil if string.nil?
-  string = string.strip
-  string.empty? ? nil : string
 end
