@@ -1,5 +1,5 @@
 class GitConfigurator
-  include FileUtils
+  include FileUtils::Verbose
 
   def setup
     current_gitconfig = "system/_gitconfig"

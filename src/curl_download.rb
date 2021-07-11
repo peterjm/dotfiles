@@ -1,11 +1,12 @@
 class CurlDownload
-  include FileUtils
+  include FileUtils::Verbose
 
-  attr_reader :url, :dest
+  attr_reader :url, :dest, :executable
 
-  def initialize(url:, dest:)
+  def initialize(url:, dest:, executable: false)
     @url = url
     @dest = dest
+    @executable = executable
   end
 
   def exists?
@@ -22,6 +23,7 @@ class CurlDownload
 
   def download
     sh "curl -fLo #{dest} --create-dirs #{url}"
+    sh "chmod +x #{dest}" if executable
   end
 
   def clean

@@ -1,5 +1,5 @@
 class SystemInstaller
-  include FileUtils
+  include FileUtils::Verbose
 
   class << self
     def current
