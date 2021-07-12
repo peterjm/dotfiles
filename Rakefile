@@ -14,7 +14,7 @@ end
 
 DOWNLOAD_SPIN_GITCONFIG = CurlDownload.new(
   url: "https://gist.githubusercontent.com/peterjm/a6339a87fd5283a1f845578a7d5ccd7a/raw/d3fa9a17b272a1fb542226057cd016824c15d5d0/spin_gitconfig",
-  dest: "./gitconfigure/gitconfig.personal"
+  dest: "./per_host_config/gitconfigure/spin/gitconfig"
 )
 DOWNLOAD_VIM_PLUG = CurlDownload.new(
   url: "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim",

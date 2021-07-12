@@ -10,6 +10,7 @@ class SystemDirectories
       path,
       dropbox_path("dotfiles", path, "common"),
       (dropbox_path("dotfiles", path, computer_name) unless computer_name.nil?)
+      (dotfiles_path("per_host_config", path, computer_name) unless computer_name.nil?)
     ].compact
   end
 
@@ -31,6 +32,10 @@ class SystemDirectories
 
   def dropbox_path(*path)
     home_path(File.join("Dropbox", *path))
+  end
+
+  def dotfiles_path(*path)
+    File.join(File.dirname(__FILE__), "..", *path)
   end
 
   def presence(string)
