@@ -9,7 +9,7 @@ class SystemDirectories
     [
       path,
       dropbox_path("dotfiles", path, "common"),
-      (dropbox_path("dotfiles", path, computer_name) unless computer_name.nil?)
+      (dropbox_path("dotfiles", path, computer_name) unless computer_name.nil?),
       (dotfiles_path("per_host_config", path, computer_name) unless computer_name.nil?)
     ].compact
   end
