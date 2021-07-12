@@ -124,7 +124,7 @@ end
 task :delete_default_spin_zshrc do
   next unless spin?
   default_zshrc = home_path('.zshrc')
-  if File.exist?(default_zshrc) && File.readlines(default_zshrc).length == 3
+  if File.exist?(default_zshrc) && File.readlines(default_zshrc).length == 32
     mv default_zshrc, home_path('.zshrc.spin_default')
   end
 end
