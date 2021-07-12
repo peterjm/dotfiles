@@ -41,6 +41,7 @@ DOWNLOAD_GIT_FREEZE_PROMPT = CurlDownload.new(
 
 task default: %i[
   system_packages
+  delete_default_spin_gitconfig
   download_spin_gitconfig
   install_git_freeze
   download_git_prompt
@@ -55,6 +56,7 @@ task update: %i[
 ]
 
 task clean: %i[
+  restore_default_spin_gitconfig
   delete_spin_gitconfig
   delete_git_prompt
   uninstall_git_freeze
@@ -102,6 +104,19 @@ task :update_vim_plugins => :install_vim_plugins
 
 task :delete_vim_plugins do
   rm_rf home_path(".vim/plugged")
+end
+
+task :delete_default_spin_gitconfig do
+  return unless spin?
+  default_gitconfig = home_path('.gitconfig')
+  if File.exist?(default_gitconfig) && File.readlines(default_gitconfig).length == 3
+    mv default_gitconfig, home_path('.gitconfig.spin_default')
+  end
+end
+
+task :restore_default_spin_gitconfig do
+  return unless spin?
+  mv home_path('.gitconfig.spin_default'), home_path('.gitconfig')
 end
 
 task :download_spin_gitconfig do
