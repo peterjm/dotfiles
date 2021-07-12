@@ -107,7 +107,7 @@ task :delete_vim_plugins do
 end
 
 task :delete_default_spin_gitconfig do
-  return unless spin?
+  next unless spin?
   default_gitconfig = home_path('.gitconfig')
   if File.exist?(default_gitconfig) && File.readlines(default_gitconfig).length == 3
     mv default_gitconfig, home_path('.gitconfig.spin_default')
@@ -115,12 +115,13 @@ task :delete_default_spin_gitconfig do
 end
 
 task :restore_default_spin_gitconfig do
-  return unless spin?
+  next unless spin?
   mv home_path('.gitconfig.spin_default'), home_path('.gitconfig')
 end
 
 task :download_spin_gitconfig do
-  DOWNLOAD_SPIN_GITCONFIG.install if spin?
+  next unless spin?
+  DOWNLOAD_SPIN_GITCONFIG.install
 end
 
 task :delete_spin_gitconfig do
