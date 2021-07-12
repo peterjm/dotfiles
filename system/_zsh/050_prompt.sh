@@ -5,6 +5,8 @@ if [[ -z "$PROMPT_COLOUR" ]]; then PROMPT_COLOUR="%F{yellow}" ; fi
 # This sets the prompt to: "hostname top-2-level-directories[git_info] %"
 if [[ -z "$PROMPT_HOST" ]]; then PROMPT_HOST="%m" ; fi
 
+LAST_COMMAND_STATUS="%(?.%F{green}√.%F{red}?%?)"
+
 GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_SHOWSTASHSTATE=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
@@ -17,5 +19,5 @@ precmd () {
     git_status="[$git_status]"
   fi
 
-  PS1="$PROMPT_COLOUR$PROMPT_HOST %2~$git_status %#%f "
+  PS1="$LAST_COMMAND_STATUS $PROMPT_COLOUR%2~$git_status %#%f "
 }
