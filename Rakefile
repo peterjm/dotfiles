@@ -3,6 +3,7 @@ require './src/curl_download'
 require './src/system_installer'
 require './src/git_configurator'
 require './src/file_linker'
+require './src/file_saver'
 
 def home_path(path)
   File.join ENV['HOME'], path
@@ -109,29 +110,19 @@ task :delete_vim_plugins do
 end
 
 task :delete_default_spin_gitconfig do
-  next unless spin?
-  default_gitconfig = home_path('.gitconfig')
-  if File.exist?(default_gitconfig) && File.readlines(default_gitconfig).length == 3
-    mv default_gitconfig, home_path('.gitconfig.spin_default')
-  end
+  FileSaver.new(file: home_path('.gitconfig'), suffix: 'spin_default').move if spin?
 end
 
 task :restore_default_spin_gitconfig do
-  next unless spin?
-  mv home_path('.gitconfig.spin_default'), home_path('.gitconfig')
+  FileSaver.new(file: home_path('.gitconfig'), suffix: 'spin_default').restore if spin?
 end
 
 task :delete_default_spin_zshrc do
-  next unless spin?
-  default_zshrc = home_path('.zshrc')
-  if File.exist?(default_zshrc) && File.readlines(default_zshrc).length == 32
-    mv default_zshrc, home_path('.zshrc.spin_default')
-  end
+  FileSaver.new(file: home_path('.zshrc'), suffix: 'spin_default').move if spin?
 end
 
 task :restore_default_spin_zshrc do
-  next unless spin?
-  mv home_path('.zshrc.spin_default'), home_path('.zshrc')
+  FileSaver.new(file: home_path('.zshrc'), suffix: 'spin_default').restore if spin?
 end
 
 task :download_spin_gitconfig do

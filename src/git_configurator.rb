@@ -42,9 +42,7 @@ class GitConfigurator
       mv src, dest
     elsif !system("diff -q #{src} #{dest}")
       system("diff #{dest} #{src}")
-      old_gitconfig = non_existing_filename("gitconfig.old")
-      warn "moved existing #{dest} to #{old_gitconfig}"
-      mv dest, old_gitconfig
+      FileSaver.new(file: dest, dest: "gitconfig.old", verbose: true).move
       mv src, dest
     else
       remove_gitconfig_file(src)
@@ -67,16 +65,5 @@ class GitConfigurator
     SystemDirectories.new("gitconfigure").directories
       .map { |path| File.join(path, "gitconfig") }
       .select { |file| File.exist?(file) }
-  end
-
-  def non_existing_filename(base)
-    return base unless File.exist?(base)
-
-    suffix = 2
-    loop do
-      name = [base, suffix].join('.')
-      return name unless File.exist?(name)
-      suffix += 1
-    end
   end
 end
