@@ -86,18 +86,19 @@ class FzfInstaller < SystemInstaller
       dest: tar_file
     ).download
     sh("tar -xf #{tar_file}")
-    mv(dotfiles_path("fzf"), installed_executable_path)
+    mkdir_p(bin_path)
+    mv("fzf", installed_executable_path)
   ensure
     rm(tar_file)
   end
 
   private
 
-  def dotfiles_path(path)
-    File.join(File.dirname(__FILE__), "..", path)
+  def bin_path(path = "")
+    File.join(ENV['HOME'], "bin", path)
   end
 
   def installed_executable_path
-    File.join(ENV['HOME'], "bin", "fzf")
+    bin_path("fzf")
   end
 end
