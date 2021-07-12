@@ -80,18 +80,22 @@ class FzfInstaller < SystemInstaller
   end
 
   def install
-    tar_file = "fzf.tar.gz"
+    tar_file = "/tmp/fzf.tar.gz"
     CurlDownload.new(
       url: "https://github.com/junegunn/fzf/releases/download/0.27.2/fzf-0.27.2-linux_amd64.tar.gz",
       dest: tar_file
     ).download
     sh("tar -xf #{tar_file}")
-    mv("fzf", installed_executable_path)
+    mv(dotfiles_path("fzf"), installed_executable_path)
   ensure
     rm(tar_file)
   end
 
   private
+
+  def dotfiles_path(path)
+    File.join(File.dirname(__FILE__), "..", path)
+  end
 
   def installed_executable_path
     File.join(ENV['HOME'], "bin", "fzf")
