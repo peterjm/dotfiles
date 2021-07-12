@@ -19,5 +19,5 @@ precmd () {
     git_status="[$git_status]"
   fi
 
-  PS1="$LAST_COMMAND_STATUS $PROMPT_COLOUR%2~$git_status %#%f "
+  PS1="$LAST_COMMAND_STATUS $PROMPT_COLOUR%B%2~%b$git_status %#%f "
 }
