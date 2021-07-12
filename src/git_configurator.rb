@@ -1,52 +1,82 @@
 class GitConfigurator
   include FileUtils::Verbose
 
+  PERSONAL_SETTINGS = [
+    "user.name",
+    "user.email",
+    "github.user",
+  ]
+
   def setup
     current_gitconfig = "system/_gitconfig"
     tmp_gitconfig = "gitconfig.tmp"
 
-    `touch #{tmp_gitconfig}`
+    create_gitconfig_file(tmp_gitconfig)
+    if verify_gitconfig_file(tmp_gitconfig)
+      finalize_gitconfig_file(tmp_gitconfig, current_gitconfig)
+    else
+      remove_gitconfig_file(tmp_gitconfig)
+    end
+  end
 
+  private
+
+  def create_gitconfig_file(filename)
+    `touch #{filename}`
     gitconfig_files.each do |file|
       File.read(file).lines.map(&:strip).reject(&:empty?).each do |config_line|
-        set_git_config(tmp_gitconfig, config_line)
+        set_git_config(filename, config_line)
       end
     end
+  end
 
-    unless confirm_git_config(tmp_gitconfig, 'user.name', 'user.email', 'github.user')
-      warn "create a gitconfig in Dropbox/dotfiles/gitconfigure with system-specific settings"
-      `rm #{tmp_gitconfig}`
-      return
-    end
+  def verify_gitconfig_file(filename)
+    results = PERSONAL_SETTINGS.map { |setting| confirm_git_config_setting(filename, setting) }
+    success = results.all?
+    warn("create a gitconfig in Dropbox/dotfiles/gitconfigure with system-specific settings") unless success
+    success
+  end
 
-    if !File.exist?(current_gitconfig)
-      mv tmp_gitconfig, current_gitconfig
-    elsif !system("diff -q #{tmp_gitconfig} #{current_gitconfig}")
-      system("diff #{current_gitconfig} #{tmp_gitconfig}")
+  def finalize_gitconfig_file(src, dest)
+    if !File.exist?(dest)
+      mv src, dest
+    elsif !system("diff -q #{src} #{dest}")
+      system("diff #{dest} #{src}")
       old_gitconfig = non_existing_filename("gitconfig.old")
-      warn "moved existing #{current_gitconfig} to #{old_gitconfig}"
-      mv current_gitconfig, old_gitconfig
-      mv tmp_gitconfig, current_gitconfig
+      warn "moved existing #{dest} to #{old_gitconfig}"
+      mv dest, old_gitconfig
+      mv src, dest
     else
-      `rm #{tmp_gitconfig}`
+      remove_gitconfig_file(src)
     end
+  end
+
+  def remove_gitconfig_file(filename)
+    `rm #{filename}`
   end
 
   def set_git_config(filename, setting_and_value)
     `git config -f #{filename} #{setting_and_value}`
   end
 
-  def confirm_git_config(filename, *settings)
-    settings.each do |setting|
-      unless `git config -f #{filename} #{setting}`
-        warn "git configuration for '#{setting}' is missing"
-      end
-    end
+  def confirm_git_config_setting(filename, setting)
+    system("git config -f #{filename} #{setting} > /dev/null")
   end
 
   def gitconfig_files
     SystemDirectories.new("gitconfigure").directories
       .map { |path| File.join(path, "gitconfig") }
       .select { |file| File.exist?(file) }
+  end
+
+  def non_existing_filename(base)
+    return base unless File.exist?(base)
+
+    suffix = 2
+    loop do
+      name = [base, suffix].join('.')
+      return name unless File.exist?(name)
+      suffix += 1
+    end
   end
 end

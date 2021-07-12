@@ -92,17 +92,6 @@ class FileLinker
     File.expand_path('..', File.dirname(__FILE__))
   end
 
-  def non_existing_filename(base)
-    return base unless File.exist?(base)
-
-    suffix = 2
-    loop do
-      name = [base, suffix].join('.')
-      return name unless File.exist?(name)
-      suffix += 1
-    end
-  end
-
   def has_git_version?(desired_version)
     `git --version`=~ %r{((?:\d+.)*\d+)}
     version_at_least?(desired_version, $1)
