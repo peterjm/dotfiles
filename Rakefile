@@ -41,6 +41,7 @@ DOWNLOAD_GIT_FREEZE_PROMPT = CurlDownload.new(
 
 task default: %i[
   system_packages
+  delete_default_spin_zshrc
   delete_default_spin_gitconfig
   download_spin_gitconfig
   install_git_freeze
@@ -57,6 +58,7 @@ task update: %i[
 
 task clean: %i[
   restore_default_spin_gitconfig
+  restore_default_spin_zshrc
   delete_spin_gitconfig
   delete_git_prompt
   uninstall_git_freeze
@@ -117,6 +119,19 @@ end
 task :restore_default_spin_gitconfig do
   next unless spin?
   mv home_path('.gitconfig.spin_default'), home_path('.gitconfig')
+end
+
+task :delete_default_spin_zshrc do
+  next unless spin?
+  default_zshrc = home_path('.zshrc')
+  if File.exist?(default_zshrc) && File.readlines(default_zshrc).length == 3
+    mv default_zshrc, home_path('.zshrc.spin_default')
+  end
+end
+
+task :restore_default_spin_zshrc do
+  next unless spin?
+  mv home_path('.zshrc.spin_default'), home_path('.zshrc')
 end
 
 task :download_spin_gitconfig do
