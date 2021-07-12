@@ -14,7 +14,11 @@ class SystemDirectories
   end
 
   def computer_name
-    prompt_host || hostname
+    spin || prompt_host || hostname
+  end
+
+  def spin
+    'spin' if ENV['SPIN']
   end
 
   def prompt_host
