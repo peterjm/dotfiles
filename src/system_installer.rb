@@ -18,6 +18,8 @@ class SystemInstaller
         AptGetInstaller.new(package_name)
       when "the_silver_searcher"
         AptGetInstaller.new("silversearcher-ag")
+      when "fzf"
+        FzfInstaller.new
       else
         NoInstaller.new(package_name)
       end
@@ -63,8 +65,35 @@ class AptGetInstaller < SystemInstaller
   def install
     sh "sudo apt-get install -y #{package_name}"
   end
+end
 
-  def system_package_name(name)
-    PACKAGE_NAMES[name] || name
+class FzfInstaller < SystemInstaller
+  # apt-get on Spin has a version of fzf that's too old to use with vim
+  # Installing manually for now. This can be removed if we can start using apt-get instead.
+
+  def initialize
+    super("fzf")
+  end
+
+  def installed?
+    File.exist?(installed_executable_path)
+  end
+
+  def install
+    tar_file = "fzf.tar.gz"
+    CurlDownload.new(
+      url: "https://github.com/junegunn/fzf/releases/download/0.27.2/fzf-0.27.2-linux_amd64.tar.gz",
+      dest: tar_file
+    ).download
+    sh("tar -xf #{tar_file}")
+    mv("fzf", installed_executable_path)
+  ensure
+    rm(tar_file)
+  end
+
+  private
+
+  def installed_executable_path
+    File.join(ENV['HOME'], "bin", "fzf")
   end
 end
