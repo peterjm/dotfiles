@@ -1,1 +1,1 @@
-export PROMPT_COLOUR="%F{green}"
+export PROMPT_COLOUR="%F{blue}"
