@@ -3,7 +3,9 @@ class FileSaver
 
   attr_reader :file, :suffix, :dest, :verbose
 
-  def initialize(file:, suffix:, dest:, verbose: false)
+  def initialize(file:, suffix: nil, dest: nil, verbose: false)
+    raise ArgumentError.new("provide either suffix or dest argument") unless suffix || dest
+
     @file = file
     @suffix = suffix
     @dest = dest
