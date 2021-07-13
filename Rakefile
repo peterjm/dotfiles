@@ -34,7 +34,7 @@ DOWNLOAD_GIT_THAW = CurlDownload.new(
 )
 DOWNLOAD_GIT_FREEZE_PROMPT = CurlDownload.new(
   url: "https://raw.githubusercontent.com/peterjm/git-freeze/master/git-freeze.sh",
-  dest: PathHelper.home_path("lib/git_freeze.sh")
+  dest: PathHelper.home_path("lib/git-freeze.sh")
 )
 
 task default: %i[
