@@ -1,13 +1,10 @@
+require './src/path_helper'
 require './src/system_directories'
 require './src/curl_download'
 require './src/system_installer'
 require './src/git_configurator'
 require './src/file_linker'
 require './src/file_saver'
-
-def home_path(path)
-  File.join ENV['HOME'], path
-end
 
 def spin?
   ENV['SPIN']
@@ -19,25 +16,25 @@ DOWNLOAD_SPIN_GITCONFIG = CurlDownload.new(
 )
 DOWNLOAD_VIM_PLUG = CurlDownload.new(
   url: "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim",
-  dest: home_path(".vim/autoload/plug.vim")
+  dest: PathHelper.home_path(".vim/autoload/plug.vim")
 )
 DOWNLOAD_GIT_PROMPT = CurlDownload.new(
   url: "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh",
-  dest: home_path(".zsh/020_git_prompt.sh")
+  dest: PathHelper.home_path(".zsh/020_git_prompt.sh")
 )
 DOWNLOAD_GIT_FREEZE = CurlDownload.new(
   url: "https://raw.githubusercontent.com/peterjm/git-freeze/master/git-freeze",
-  dest: home_path("bin/git-freeze"),
+  dest: PathHelper.home_path("bin/git-freeze"),
   executable: true
 )
 DOWNLOAD_GIT_THAW = CurlDownload.new(
   url: "https://raw.githubusercontent.com/peterjm/git-freeze/master/git-thaw",
-  dest: home_path("bin/git-thaw"),
+  dest: PathHelper.home_path("bin/git-thaw"),
   executable: true
 )
 DOWNLOAD_GIT_FREEZE_PROMPT = CurlDownload.new(
   url: "https://raw.githubusercontent.com/peterjm/git-freeze/master/git-freeze.sh",
-  dest: home_path("lib/git_freeze.sh")
+  dest: PathHelper.home_path("lib/git_freeze.sh")
 )
 
 task default: %i[
@@ -106,23 +103,23 @@ end
 task :update_vim_plugins => :install_vim_plugins
 
 task :delete_vim_plugins do
-  rm_rf home_path(".vim/plugged")
+  rm_rf PathHelper.home_path(".vim/plugged")
 end
 
 task :delete_default_spin_gitconfig do
-  FileSaver.new(file: home_path('.gitconfig'), suffix: 'spin_default').move if spin?
+  FileSaver.new(file: PathHelper.home_path('.gitconfig'), suffix: 'spin_default').move if spin?
 end
 
 task :restore_default_spin_gitconfig do
-  FileSaver.new(file: home_path('.gitconfig'), suffix: 'spin_default').restore if spin?
+  FileSaver.new(file: PathHelper.home_path('.gitconfig'), suffix: 'spin_default').restore if spin?
 end
 
 task :delete_default_spin_zshrc do
-  FileSaver.new(file: home_path('.zshrc'), suffix: 'spin_default').move if spin?
+  FileSaver.new(file: PathHelper.home_path('.zshrc'), suffix: 'spin_default').move if spin?
 end
 
 task :restore_default_spin_zshrc do
-  FileSaver.new(file: home_path('.zshrc'), suffix: 'spin_default').restore if spin?
+  FileSaver.new(file: PathHelper.home_path('.zshrc'), suffix: 'spin_default').restore if spin?
 end
 
 task :download_spin_gitconfig do

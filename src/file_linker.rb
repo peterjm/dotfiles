@@ -1,3 +1,5 @@
+require 'pathname'
+
 class FileLinker
   include FileUtils::Verbose
 
@@ -13,6 +15,8 @@ class FileLinker
     end
   end
 
+  private
+
   def system_directories(path = "system")
     SystemDirectories.new(path).directories
   end
@@ -20,14 +24,13 @@ class FileLinker
   def each_system_file(system_dir)
     return unless File.exist?(system_dir)
 
-    Dir.glob("#{system_dir}/**/**") do |systemfile|
-      next unless File.file?(systemfile) || File.symlink?(systemfile)
+    Dir.glob("#{system_dir}/**/**") do |system_file|
+      next unless File.file?(system_file) || File.symlink?(system_file)
 
-      relative_file = without_directory(systemfile, system_dir)
-      dotfile = home_path(dotify(relative_file))
-      systemfile = expanded_path(systemfile)
+      relative_file = without_directory(system_file, system_dir)
+      dotfile = PathHelper.home_path(dotify(relative_file))
 
-      yield dotfile, systemfile
+      yield dotfile, system_file
     end
   end
 
@@ -77,30 +80,11 @@ class FileLinker
   end
 
   def without_directory(file, dir)
-    file =~ /^#{dir}\/(.*)$/ && $1
+    Pathname.new(file).relative_path_from(dir).to_s
   end
 
   def dotify(path)
     File.join path.split(File::SEPARATOR).map{ |s| s.sub(/^_/, '.') }
-  end
-
-  def expanded_path(path)
-    File.expand_path(path, dotfiles_root)
-  end
-
-  def dotfiles_root
-    File.expand_path('..', File.dirname(__FILE__))
-  end
-
-  def has_git_version?(desired_version)
-    `git --version`=~ %r{((?:\d+.)*\d+)}
-    version_at_least?(desired_version, $1)
-  end
-
-  def version_at_least?(desired_version_string, version_string)
-    desired_version = desired_version_string.split('.').map(&:to_i)
-    version = version_string.split('.').map(&:to_i)
-    (version <=> desired_version) >= 0
   end
 
   def exists_or_symlinked?(path)

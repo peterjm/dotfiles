@@ -95,7 +95,7 @@ class FzfInstaller < SystemInstaller
   private
 
   def bin_path(path = "")
-    File.join(ENV['HOME'], "bin", path)
+    PathHelper.home_path("bin", path)
   end
 
   def installed_executable_path
