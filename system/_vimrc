@@ -25,10 +25,6 @@ Plug 'nanotech/jellybeans.vim'
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
-filetype plugin indent on       " load file type plugins + indentation
-
-syntax enable                   " enable syntax highlighting
-set encoding=utf-8
 set background=dark             " indicates that I use a dark background
 silent! colorscheme jellybeans
 set visualbell                  " disable audible bell
@@ -37,19 +33,9 @@ let mapleader = ","             " map <Leader> to command
 set showcmd                     " display incomplete commands
 set number
 set cursorline                  " highlight the current line
-set ruler                       " show the cursor position all the time
 set list                        " show invisible characters
 
 set noswapfile                  " don't save swap files
-
-"" List chars
-set listchars=""                " Reset the listchars
-set listchars=tab:\ \           " a tab should display as "  ", trailing whitespace as "."
-set listchars+=trail:-          " show trailing spaces as dashes
-set listchars+=extends:>        " The character to show in the last column when wrap is
-                                " off and the line continues beyond the right of the screen
-set listchars+=precedes:<       " The character to show in the last column when wrap is
-                                " off and the line continues beyond the right of the screen
 
 set splitright                  " open new splits to the right
 set splitbelow                  " ... and bottom
@@ -60,7 +46,6 @@ set linebreak                   " soft-wrap lines at word boundaries
 set showbreak=+                 " symbol to display in front of wrapped lines
 set tabstop=2 shiftwidth=2      " a tab is two spaces
 set expandtab                   " use spaces, not tabs
-set backspace=indent,eol,start  " backspace through everything in insert mode
 
 set textwidth=120               " number of columns before linewrap
 set colorcolumn=+1              " highlight the column that code shouldn't extend beyond
@@ -68,7 +53,6 @@ hi ColorColumn guibg=#2d2d2d ctermbg=246
 
 "" Searching
 set nohlsearch                  " don't highlight search matches
-set incsearch                   " incremental searching
 set ignorecase                  " searches are case insensitive...
 set smartcase                   " ... unless they contain at least one capital letter
 
@@ -76,8 +60,6 @@ set pastetoggle=<F10>           " F10 to toggle paste mode
 
 " also update the list in .ignore_for_fzf
 set wildignore+=*.gif,*.png,*.jpg,*.jpeg,*.bmp,*.tiff,*.psd,*.svg,*.woff,*.woff2,*.eot,*.ttf
-
-set autoread                    " when a file's content's have changed, automatically load it again
 
 if has("autocmd")
   "" Filetypes
