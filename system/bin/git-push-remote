@@ -1,16 +1,13 @@
 #!/bin/bash
 
-current_git_branch () {
-  git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
-}
-BRANCH_NAME=$(current_git_branch)
+CURRENT_BRANCH=`git-current-branch`
 
-UPSTREAM_REMOTE=`git config branch.$BRANCH_NAME.remote`
-UPSTREAM_BRANCH=`git config branch.$BRANCH_NAME.merge`
+UPSTREAM_REMOTE=`git config branch.$CURRENT_BRANCH.remote`
+UPSTREAM_BRANCH=`git config branch.$CURRENT_BRANCH.merge`
 if [ -z "$UPSTREAM_BRANCH" ]; then
-  git config branch.$BRANCH_NAME.remote origin
-  git config branch.$BRANCH_NAME.merge $BRANCH_NAME
-  git push -u origin $BRANCH_NAME
+  git config branch.$CURRENT_BRANCH.remote origin
+  git config branch.$CURRENT_BRANCH.merge $CURRENT_BRANCH
+  git push -u origin $CURRENT_BRANCH
 else
-  echo "Branch $BRANCH_NAME is already configured to push to $UPSTREAM_REMOTE:$UPSTREAM_BRANCH"
+  echo "Branch $CURRENT_BRANCH is already configured to push to $UPSTREAM_REMOTE:$UPSTREAM_BRANCH"
 fi

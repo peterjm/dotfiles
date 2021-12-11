@@ -1,13 +1,11 @@
 #!/bin/bash
 
-CURRENT_BRANCH=`git branch | awk '/^\*/ { print $2 }'`
+CURRENT_BRANCH=`git-current-branch`
 
 if [ -n "$1" ]; then
   MAIN_BRANCH=$1
-elif [ -f .git-main-branch ]; then
-  MAIN_BRANCH=`cat .git-main-branch`
 else
-  MAIN_BRANCH="master"
+  MAIN_BRANCH=`git-main-branch`
 fi
 
 if [ "$CURRENT_BRANCH" == "$MAIN_BRANCH" ]; then
