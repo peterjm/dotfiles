@@ -25,7 +25,7 @@ class FileLinker
     return unless File.exist?(system_dir)
 
     Dir.glob("#{system_dir}/**/**") do |system_file|
-      next unless File.file?(system_file) || File.symlink?(system_file)
+      next unless treat_as_file?(system_file)
 
       relative_file = without_directory(system_file, system_dir)
       dotfile = PathHelper.home_path(dotify(relative_file))
@@ -77,6 +77,21 @@ class FileLinker
 
   def unlink_file(file)
     rm file
+  end
+
+  def treat_as_file?(file)
+    return false if inside_directory_acting_as_file?(file)
+    File.file?(file) || File.symlink?(file) || directory_acting_as_file?(file)
+  end
+
+  def inside_directory_acting_as_file?(file)
+    # .workflow files are Automator apps
+    file.include?(".workflow/")
+  end
+
+  def directory_acting_as_file?(file)
+    # .workflow files are Automator apps
+    File.directory?(file) && file.end_with?(".workflow")
   end
 
   def without_directory(file, dir)
