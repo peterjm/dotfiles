@@ -1,5 +1,0 @@
-#!/usr/bin/env ruby
-
-require_relative "../lib/elgato/api_client"
-
-Elgato::ApiClient.new.toggle_light
