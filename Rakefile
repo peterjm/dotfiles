@@ -59,6 +59,7 @@ task system_packages: %i[
   fzf
   ruby_install
   chruby
+  jq
 ]
 
 task :bash_completion do
@@ -83,6 +84,10 @@ end
 
 task :chruby do
   SystemInstaller.for("chruby").check_and_install
+end
+
+task :jq do
+  SystemInstaller.for("jq").check_and_install
 end
 
 task :download_vim_plug do
