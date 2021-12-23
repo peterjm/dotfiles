@@ -70,6 +70,8 @@ task system_packages: %i[
   zsh_completion
   silver_searcher
   fzf
+  ruby_install
+  chruby
 ]
 
 task :bash_completion do
@@ -86,6 +88,14 @@ end
 
 task :fzf do
   SystemInstaller.for("fzf").check_and_install
+end
+
+task :ruby_install do
+  SystemInstaller.for("ruby-install").check_and_install
+end
+
+task :chruby do
+  SystemInstaller.for("chruby").check_and_install
 end
 
 task :download_vim_plug do
