@@ -35,6 +35,7 @@ task default: %i[
   download_git_prompt
   gitconfig
   link
+  install_latest_ruby
   download_vim_plug
   install_vim_plugins
 ]
@@ -108,6 +109,12 @@ end
 
 task :delete_git_prompt do
   DOWNLOAD_GIT_PROMPT.clean
+end
+
+task :install_latest_ruby do
+  if Dir.glob(PathHelper.home_path(".rubies/**")).none?
+    sh "ruby-install ruby --no-reinstall"
+  end
 end
 
 task install_git_freeze: %i[
