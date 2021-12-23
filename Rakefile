@@ -6,14 +6,6 @@ require './src/git_configurator'
 require './src/file_linker'
 require './src/file_saver'
 
-def spin?
-  ENV['SPIN']
-end
-
-DOWNLOAD_SPIN_GITCONFIG = CurlDownload.new(
-  url: "https://gist.githubusercontent.com/peterjm/a6339a87fd5283a1f845578a7d5ccd7a/raw/d3fa9a17b272a1fb542226057cd016824c15d5d0/spin_gitconfig",
-  dest: "./per_host_config/gitconfigure/spin/gitconfig"
-)
 DOWNLOAD_VIM_PLUG = CurlDownload.new(
   url: "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim",
   dest: PathHelper.home_path(".vim/autoload/plug.vim")
@@ -39,9 +31,6 @@ DOWNLOAD_GIT_FREEZE_PROMPT = CurlDownload.new(
 
 task default: %i[
   system_packages
-  delete_default_spin_zshrc
-  delete_default_spin_gitconfig
-  download_spin_gitconfig
   install_git_freeze
   download_git_prompt
   gitconfig
@@ -55,9 +44,6 @@ task update: %i[
 ]
 
 task clean: %i[
-  restore_default_spin_gitconfig
-  restore_default_spin_zshrc
-  delete_spin_gitconfig
   delete_git_prompt
   uninstall_git_freeze
   delete_vim_plug
@@ -114,31 +100,6 @@ task :update_vim_plugins => :install_vim_plugins
 
 task :delete_vim_plugins do
   rm_rf PathHelper.home_path(".vim/plugged")
-end
-
-task :delete_default_spin_gitconfig do
-  FileSaver.new(file: PathHelper.home_path('.gitconfig'), suffix: 'spin_default').move if spin?
-end
-
-task :restore_default_spin_gitconfig do
-  FileSaver.new(file: PathHelper.home_path('.gitconfig'), suffix: 'spin_default').restore if spin?
-end
-
-task :delete_default_spin_zshrc do
-  FileSaver.new(file: PathHelper.home_path('.zshrc'), suffix: 'spin_default').move if spin?
-end
-
-task :restore_default_spin_zshrc do
-  FileSaver.new(file: PathHelper.home_path('.zshrc'), suffix: 'spin_default').restore if spin?
-end
-
-task :download_spin_gitconfig do
-  next unless spin?
-  DOWNLOAD_SPIN_GITCONFIG.install
-end
-
-task :delete_spin_gitconfig do
-  DOWNLOAD_SPIN_GITCONFIG.clean
 end
 
 task :download_git_prompt do

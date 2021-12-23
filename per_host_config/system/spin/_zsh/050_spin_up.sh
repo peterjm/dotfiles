@@ -1,3 +1,0 @@
-spinup() {
-  .spin/bin/update
-}
