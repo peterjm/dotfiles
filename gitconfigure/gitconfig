@@ -17,6 +17,8 @@ color.branch auto
 core.excludesfile ~/.gitignore
 core.commitGraph true
 
+init.defaultBranch main
+
 apply.whitespace strip
 
 push.default simple
