@@ -28,9 +28,18 @@ DOWNLOAD_GIT_FREEZE_PROMPT = CurlDownload.new(
   url: "https://raw.githubusercontent.com/peterjm/git-freeze/master/git-freeze.sh",
   dest: PathHelper.home_path("lib/git-freeze.sh")
 )
+SYSTEM_PACKAGES = [
+  "bash-completion",
+  "zsh-completions",
+  "the_silver_searcher",
+  "fzf",
+  "ruby-install",
+  "chruby",
+  "jq",
+].each_with_object({}) { |package, map| map[package.gsub("-", "_")] = package }
 
 task default: %i[
-  system_packages
+  install_system_packages
   install_git_freeze
   download_git_prompt
   gitconfig
@@ -52,42 +61,12 @@ task clean: %i[
   unlink
 ]
 
-task system_packages: %i[
-  bash_completion
-  zsh_completion
-  silver_searcher
-  fzf
-  ruby_install
-  chruby
-  jq
-]
+task install_system_packages: SYSTEM_PACKAGES.keys.map { |package| "install_#{package}" }
 
-task :bash_completion do
-  SystemInstaller.for("bash-completion").check_and_install
-end
-
-task :zsh_completion do
-  SystemInstaller.for("zsh-completions").check_and_install
-end
-
-task :silver_searcher do
-  SystemInstaller.for("the_silver_searcher").check_and_install
-end
-
-task :fzf do
-  SystemInstaller.for("fzf").check_and_install
-end
-
-task :ruby_install do
-  SystemInstaller.for("ruby-install").check_and_install
-end
-
-task :chruby do
-  SystemInstaller.for("chruby").check_and_install
-end
-
-task :jq do
-  SystemInstaller.for("jq").check_and_install
+SYSTEM_PACKAGES.each do |task_name, package_name|
+  task "install_#{task_name}" do
+    SystemInstaller.for(package_name).check_and_install
+  end
 end
 
 task :download_vim_plug do
