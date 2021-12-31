@@ -56,6 +56,7 @@ class FileLinker
   end
 
   def directory_empty?(dir)
+    return false if dir.end_with?("Library/Services")
     Dir.entries(dir) == %w[. ..]
   end
 
