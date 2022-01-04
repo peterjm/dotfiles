@@ -2,4 +2,4 @@
 function git-frozen () {
   return 1
 }
-[ ! -f "$HOME/lib/git-freeze.sh" ] || source "$HOME/lib/git-freeze.sh"
+source_if_exists "$HOME/lib/git-freeze.sh"
