@@ -18,6 +18,7 @@ Plug 'vim-scripts/localvimrc'
 Plug 'tpope/vim-fugitive'
 Plug 'leafgarland/typescript-vim'
 Plug 'peitalin/vim-jsx-typescript'
+Plug 'dart-lang/dart-vim-plugin'
 
 " Colour Schemes
 Plug 'nanotech/jellybeans.vim'
