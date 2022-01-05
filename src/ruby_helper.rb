@@ -2,6 +2,8 @@ class RubyHelper
   include FileUtils::Verbose
 
   def install_gem(gem_name)
+    return if gem_installed?(gem_name)
+
     sh gem_command,
       "install",
       "--no-document",
@@ -11,6 +13,8 @@ class RubyHelper
   end
 
   def uninstall_gem(gem_name)
+    return unless gem_installed?(gem_name)
+
     sh gem_command,
       "uninstall",
       "--executable",
@@ -26,6 +30,12 @@ class RubyHelper
   end
 
   private
+
+  def gem_installed?(gem_name)
+    sh(gem_command, "list", "--silent", "--installed", "\\A#{gem_name}\\z", verbose: false) do |ok, res|
+      return ok
+    end
+  end
 
   def gem_command
     PathHelper.home_path(".rubies", ruby_version, "bin", "gem")
