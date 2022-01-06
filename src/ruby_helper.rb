@@ -12,6 +12,15 @@ class RubyHelper
       gem_name
   end
 
+  def update_gem(gem_name)
+    sh gem_command,
+      "update",
+      "--no-document",
+      "--bindir",
+      PathHelper.home_path("bin"),
+      gem_name
+  end
+
   def uninstall_gem(gem_name)
     return unless gem_installed?(gem_name)
 

@@ -57,6 +57,7 @@ task default: %i[
 
 task update: %i[
   update_vim_plugins
+  update_gems
 ]
 
 task clean: %i[
@@ -78,11 +79,17 @@ end
 
 task install_gems: RUBY_GEMS.keys.map { |gem| "install_#{gem}_gem" }
 
+task update_gems: RUBY_GEMS.keys.map { |gem| "update_#{gem}_gem" }
+
 task uninstall_gems: RUBY_GEMS.keys.map { |gem| "uninstall_#{gem}_gem" }
 
 RUBY_GEMS.each do |task_name, gem_name|
   task "install_#{task_name}_gem" do
     RubyHelper.new.install_gem(gem_name)
+  end
+
+  task "update_#{task_name}_gem" do
+    RubyHelper.new.update_gem(gem_name)
   end
 
   task "uninstall_#{task_name}_gem" do
