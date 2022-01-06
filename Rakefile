@@ -37,6 +37,7 @@ SYSTEM_PACKAGES = [
   "ruby-install",
   "chruby",
   "jq",
+  "gh",
 ].each_with_object({}) { |package_name, map| map[package_name.gsub("-", "_")] = package_name }
 RUBY_GEMS = [
   "light_me_up"
