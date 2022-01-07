@@ -3,5 +3,5 @@
 if [ -f .git-main-branch ]; then
   echo `cat .git-main-branch`
 else
-  echo "master"
+  echo "main"
 fi
