@@ -17,6 +17,9 @@
 # used by git-refresh
 .git-main-branch
 
+# used by related-files
+.related_files_mapping.json
+
 # vendored gems
 .bundle/
 

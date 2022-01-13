@@ -1,0 +1,72 @@
+#!/usr/bin/env ruby
+
+require 'json'
+
+class RelatedFileFinder
+  attr_reader :pattern_map
+
+  class Pattern
+    attr_reader :regexp
+    attr_reader :related_file_pattern
+
+    def initialize(regexp, related_file_pattern)
+      @regexp = regexp
+      @related_file_pattern = related_file_pattern
+    end
+
+    def match(file, &block)
+      match = regexp.match(file)
+      block.call(build_related_file(match)) if match
+    end
+
+    def build_related_file(match)
+      related_file_pattern.gsub(/\$(\d+)/) do |matched_param|
+        match[$1.to_i]
+      end
+    end
+  end
+
+  def initialize(config = {})
+    @pattern_map = config
+  end
+
+  def load_config(filename)
+    return unless File.exist?(filename)
+
+    config = JSON.parse(File.read(filename))
+    config.each do |base, related|
+      pattern_map[base] ||= []
+      pattern_map[base] += Array(related)
+    end
+  end
+
+  def related_files(file)
+    patterns.each_with_object([file]) do |pattern, related|
+      pattern.match(file) do |related_file|
+        related << related_file if File.exist?(related_file)
+      end
+    end
+  end
+
+  def patterns
+    @patterns ||= pattern_map.each_with_object([]) do |(regexp_str, related_list), list|
+      regexp = Regexp.new(regexp_str)
+      related_list.each do |related|
+        list << Pattern.new(regexp, related)
+      end
+    end
+  end
+end
+
+finder = RelatedFileFinder.new
+finder.load_config(File.join(Dir.home, ".related_files_mapping.json"))
+finder.load_config(".related_files_mapping.json")
+
+files = STDIN.readlines.map(&:strip)
+
+related_files = files.each_with_object([]) do |file, list|
+  related = finder.related_files(file)
+  list.concat(related)
+end
+
+related_files.uniq.each { |file| puts file }
