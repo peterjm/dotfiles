@@ -1,6 +1,13 @@
 #!/bin/bash
 
-if [ "$1" == "--include-branch-commits" ] || [ "$1" == "-b" ]; then
+INCLUDE_BRANCH_COMMITS=0
+for arg in $@; do
+  if [ "$arg" == "--include-branch-commits" ] || [ "$arg" == "-b" ]; then
+    INCLUDE_BRANCH_COMMITS=1
+  fi
+done
+
+if [ $INCLUDE_BRANCH_COMMITS == 1 ]; then
   git diff --name-only $(git merge-base HEAD $(git-main-branch))
   git ls-files -o --exclude-standard
 else
