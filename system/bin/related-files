@@ -62,7 +62,7 @@ finder = RelatedFileFinder.new
 finder.load_config(File.join(Dir.home, ".related_files_mapping.json"))
 finder.load_config(".related_files_mapping.json")
 
-files = STDIN.readlines.map(&:strip)
+files = $stdin.stat.pipe? ?  $stdin.readlines(chomp: true) : []
 
 related_files = files.each_with_object([]) do |file, list|
   related = finder.related_files(file)
