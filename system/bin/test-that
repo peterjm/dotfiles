@@ -1,0 +1,200 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+module TestThat
+  class RubyTester
+    REQUIRE_ALL_TESTS = '-e "Dir.glob(\"**/*_test.rb\", base: \"test\"){|f| require f}"'
+    REQUIRE_EACH_TEST = '-e "ARGV.each{|f| require f}"'
+
+    def enabled?
+      File.directory?("test")
+    end
+
+    def select_tests(files)
+      files
+        .select { |f| f.start_with?("test/") }
+        .select { |f| f.end_with?("_test.rb") }
+    end
+
+    def test_all_command
+      ["ruby", "-Itest", REQUIRE_ALL_TESTS].join(" ")
+    end
+
+    def test_files_command(files)
+      files_relative_to_test_dir = files.map { |f| f.sub(%r{\Atest/}, "") }
+      ["ruby", "-Itest", REQUIRE_EACH_TEST, *files_relative_to_test_dir].join(" ")
+    end
+  end
+
+  class RailsTester
+    def enabled?
+      File.directory?("test") && File.exist?("config/application.rb")
+    end
+
+    def select_tests(files)
+      files
+        .select { |f| f.start_with?("test/") }
+        .select { |f| f.end_with?("_test.rb") }
+    end
+
+    def test_all_command
+      "rails test"
+    end
+
+    def test_files_command(files)
+      ["rails", "test", *files].join(" ")
+    end
+  end
+
+  class RspecTester
+    def enabled?
+      File.directory?("spec")
+    end
+
+    def select_tests(files)
+      files
+        .select { |f| f.start_with?("spec/") }
+        .select { |f| f.end_with?("_spec.rb") }
+    end
+
+    def test_all_command
+      "rspec"
+    end
+
+    def test_files_command(files)
+      ["rspec", *files].join(" ")
+    end
+  end
+
+  class TestRunner
+    class All < TestRunner
+      def test
+        system(tester.test_all_command)
+      end
+    end
+
+    class Selected < TestRunner
+      attr_reader :tests_to_run
+
+      def initialize(tester, tests_to_run)
+        super(tester)
+        @tests_to_run = tests_to_run
+      end
+
+      def test
+        system(tester.test_files_command(tests_to_run))
+      end
+    end
+
+    class VerboseSelected < Selected
+      def test
+        print_tests
+        super
+      end
+
+      private
+
+      def print_tests
+        puts "Running tests for:"
+        tests_to_run.each { |f| puts "  #{f}" }
+      end
+    end
+
+    class Empty < TestRunner
+      def initialize
+        super(nil)
+      end
+
+      def test
+        puts "No tests to run"
+        true
+      end
+    end
+
+    class Error < TestRunner
+      def initialize
+        super(nil)
+      end
+
+      def test
+        warn "Could not run tests; no compatible test environment detected"
+        false
+      end
+    end
+
+    attr_reader :tester
+
+    def initialize(tester)
+      @tester = tester
+    end
+  end
+
+  class TestBuilder
+    class << self
+      def build(options)
+        new(options).build
+      end
+    end
+
+    attr_reader :options
+
+    def initialize(options)
+      @options = options
+    end
+
+    def build
+      if no_tester?
+        TestRunner::Error.new
+      elsif test_all?
+        TestRunner::All.new(tester)
+      elsif selected_tests.any?
+        TestRunner::Selected.new(tester, selected_tests)
+      elsif stream_tests.any?
+        TestRunner::VerboseSelected.new(tester, stream_tests)
+      else
+        TestRunner::Empty.new
+      end
+    end
+
+    private
+
+    def no_tester?
+      tester.nil?
+    end
+
+    def test_all?
+      options[:all]
+    end
+
+    def selected_tests
+      @selected_tests ||= tester.select_tests(options[:tests])
+    end
+
+    def stream_tests
+      @stream_tests ||= begin
+        files = $stdin.stat.pipe? ?  $stdin.readlines(chomp: true) : []
+        tester.select_tests(files)
+      end
+    end
+
+    def tester
+      @tester ||= testers.detect(&:enabled?)
+    end
+
+    def testers
+      [
+        RailsTester.new,
+        RubyTester.new,
+        RspecTester.new
+      ]
+    end
+  end
+end
+
+ARGV.delete("-b") || ARGV.delete("--include-branch-commits")
+runner = TestThat::TestBuilder.build(
+  all: ARGV.delete("-a") || ARGV.delete("--all"),
+  tests: ARGV,
+)
+success = runner.test
+exit 1 unless success
