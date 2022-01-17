@@ -2,8 +2,5 @@
   "app/(.*).rb": [
     "test/$1_test.rb",
     "spec/$1_spec.rb"
-  ],
-  "system/bin/(.*)": [
-    "test/system/bin/$1_test.rb"
   ]
 }
