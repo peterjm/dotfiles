@@ -1,88 +1,140 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
+require "#{Dir.home}/lib/optimist.rb"
 
 module TestThat
-  class RubyTester
-    REQUIRE_ALL_TESTS = '-e "Dir.glob(\"**/*_test.rb\", base: \"test\"){|f| require f}"'
-    REQUIRE_EACH_TEST = '-e "ARGV.each{|f| require f}"'
+  module TestHarness
+    class Ruby
+      REQUIRE_ALL_TESTS = '-e "Dir.glob(\"**/*_test.rb\", base: \"test\"){|f| require f}"'
+      REQUIRE_EACH_TEST = '-e "ARGV.each{|f| require f}"'
 
-    def enabled?
-      File.directory?("test")
-    end
+      def enabled?
+        File.directory?("test")
+      end
 
-    def select_tests(files)
-      files
-        .select { |f| f.start_with?("test/") }
-        .select { |f| f.end_with?("_test.rb") }
-    end
+      def select_tests(files)
+        files
+          .select { |f| f.start_with?("test/") }
+          .select { |f| f.end_with?("_test.rb") }
+      end
 
-    def test_all_command
-      ["ruby", "-Itest", REQUIRE_ALL_TESTS].join(" ")
-    end
+      def test_all_command
+        ["ruby", "-Itest", REQUIRE_ALL_TESTS].join(" ")
+      end
 
-    def test_files_command(files)
-      files_relative_to_test_dir = files.map { |f| f.sub(%r{\Atest/}, "") }
-      ["ruby", "-Itest", REQUIRE_EACH_TEST, *files_relative_to_test_dir].join(" ")
-    end
-  end
+      def test_failed_command
+        puts "Re-running failures not available for this test harness"
+        "false"
+      end
 
-  class RailsTester
-    def enabled?
-      File.directory?("test") && File.exist?("config/application.rb")
-    end
-
-    def select_tests(files)
-      files
-        .select { |f| f.start_with?("test/") }
-        .select { |f| f.end_with?("_test.rb") }
-    end
-
-    def test_all_command
-      "rails test"
-    end
-
-    def test_files_command(files)
-      ["rails", "test", *files].join(" ")
-    end
-  end
-
-  class RspecTester
-    def enabled?
-      File.directory?("spec")
-    end
-
-    def select_tests(files)
-      files
-        .select { |f| f.start_with?("spec/") }
-        .select { |f| f.end_with?("_spec.rb") }
-    end
-
-    def test_all_command
-      "rspec"
-    end
-
-    def test_files_command(files)
-      ["rspec", *files].join(" ")
-    end
-  end
-
-  class TestRunner
-    class All < TestRunner
-      def test
-        system(tester.test_all_command)
+      def test_files_command(files)
+        files_relative_to_test_dir = files.map { |f| f.sub(%r{\Atest/}, "") }
+        ["ruby", "-Itest", REQUIRE_EACH_TEST, *files_relative_to_test_dir].join(" ")
       end
     end
 
-    class Selected < TestRunner
+    class Rails
+      def enabled?
+        File.directory?("test") && File.exist?("config/application.rb")
+      end
+
+      def select_tests(files)
+        files
+          .select { |f| f.start_with?("test/") }
+          .select { |f| f.end_with?("_test.rb") }
+      end
+
+      def test_all_command
+        "rails test"
+      end
+
+      def test_failed_command
+        puts "Re-running failures not available for this test harness"
+        "false"
+      end
+
+      def test_files_command(files)
+        ["rails", "test", *files].join(" ")
+      end
+    end
+
+    class Rspec
+      def enabled?
+        File.directory?("spec")
+      end
+
+      def select_tests(files)
+        files
+          .select { |f| f.start_with?("spec/") }
+          .select { |f| f.end_with?("_spec.rb") }
+      end
+
+      def test_all_command
+        "rspec"
+      end
+
+      def test_failed_command
+        "rspec --only-failures"
+      end
+
+      def test_files_command(files)
+        ["rspec", *files].join(" ")
+      end
+    end
+  end
+
+  module CommandRunner
+    class System
+      def run(command)
+        system(command)
+      end
+    end
+
+    class Printer
+      def run(command)
+        puts command
+        true
+      end
+    end
+  end
+
+  class Tester
+    class Basic
+      attr_reader :test_harness
+      attr_reader :command_runner
+
+      def initialize(test_harness, command_runner)
+        @test_harness = test_harness
+        @command_runner = command_runner
+      end
+
+      def run(command)
+        command_runner.run(command)
+      end
+    end
+
+    class All < Basic
+      def test
+        run(test_harness.test_all_command)
+      end
+    end
+
+    class Failed < Basic
+      def test
+        run(test_harness.test_failed_command)
+      end
+    end
+
+    class Selected < Basic
       attr_reader :tests_to_run
 
-      def initialize(tester, tests_to_run)
-        super(tester)
+      def initialize(test_harness, command_runner, tests_to_run)
+        super(test_harness, command_runner)
         @tests_to_run = tests_to_run
       end
 
       def test
-        system(tester.test_files_command(tests_to_run))
+        run(test_harness.test_files_command(tests_to_run))
       end
     end
 
@@ -100,32 +152,18 @@ module TestThat
       end
     end
 
-    class Empty < TestRunner
-      def initialize
-        super(nil)
-      end
-
+    class Empty < Tester
       def test
         puts "No tests to run"
         true
       end
     end
 
-    class Error < TestRunner
-      def initialize
-        super(nil)
-      end
-
+    class Error < Tester
       def test
         warn "Could not run tests; no compatible test environment detected"
         false
       end
-    end
-
-    attr_reader :tester
-
-    def initialize(tester)
-      @tester = tester
     end
   end
 
@@ -143,58 +181,78 @@ module TestThat
     end
 
     def build
-      if no_tester?
-        TestRunner::Error.new
+      if no_test_harness?
+        Tester::Error.new
       elsif test_all?
-        TestRunner::All.new(tester)
+        Tester::All.new(test_harness, command_runner)
+      elsif test_failed?
+        Tester::Failed.new(test_harness, command_runner)
       elsif selected_tests.any?
-        TestRunner::Selected.new(tester, selected_tests)
+        Tester::Selected.new(test_harness, command_runner, selected_tests)
       elsif stream_tests.any?
-        TestRunner::VerboseSelected.new(tester, stream_tests)
+        Tester::VerboseSelected.new(test_harness, command_runner, stream_tests)
       else
-        TestRunner::Empty.new
+        Tester::Empty.new
       end
     end
 
     private
 
-    def no_tester?
-      tester.nil?
+    def no_test_harness?
+      test_harness.nil?
     end
 
     def test_all?
       options[:all]
     end
 
+    def test_failed?
+      options[:failed]
+    end
+
+    def dry_run?
+      options[:dry_run]
+    end
+
     def selected_tests
-      @selected_tests ||= tester.select_tests(options[:tests])
+      @selected_tests ||= test_harness.select_tests(options[:tests])
     end
 
     def stream_tests
       @stream_tests ||= begin
         files = $stdin.stat.pipe? ?  $stdin.readlines(chomp: true) : []
-        tester.select_tests(files)
+        test_harness.select_tests(files)
       end
     end
 
-    def tester
-      @tester ||= testers.detect(&:enabled?)
+    def test_harness
+      @test_harness ||= test_harnesses.detect(&:enabled?)
     end
 
-    def testers
+    def command_runner
+      if dry_run?
+        CommandRunner::Printer.new
+      else
+        CommandRunner::System.new
+      end
+    end
+
+    def test_harnesses
       [
-        RailsTester.new,
-        RubyTester.new,
-        RspecTester.new
+        TestHarness::Rails.new,
+        TestHarness::Ruby.new,
+        TestHarness::Rspec.new
       ]
     end
   end
 end
 
-ARGV.delete("-b") || ARGV.delete("--include-branch-commits")
-runner = TestThat::TestBuilder.build(
-  all: ARGV.delete("-a") || ARGV.delete("--all"),
-  tests: ARGV,
-)
+options = Optimist::options do
+  opt :all, "Run all tests"
+  opt :dry_run, "Print out test command instead of executing it"
+  opt :failed, "Run previously failed tests"
+end
+
+runner = TestThat::TestBuilder.build(options.merge(tests: ARGV))
 success = runner.test
 exit 1 unless success
