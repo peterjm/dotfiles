@@ -247,10 +247,11 @@ module TestThat
   end
 end
 
-options = Optimist::options do
+options = Optimist.options do
   opt :all, "Run all tests"
   opt :dry_run, "Print out test command instead of executing it"
   opt :failed, "Run previously failed tests"
+  opt :include_branch_commits, "Ignored", short: "b"
 end
 
 runner = TestThat::TestBuilder.build(options.merge(tests: ARGV))
