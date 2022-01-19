@@ -1,7 +1,1 @@
-#!/bin/bash
-
-if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-  git-changed-files $@ | related-files | test-that $@
-else
-  test-that $@
-fi
+test-that

@@ -10,10 +10,14 @@ function has_arg () {
   return 1
 }
 
-if has_arg "-b" $@ || has_arg "--include-branch-commits" $@; then
-  git diff --name-only $(git merge-base HEAD $(git-main-branch))
-  git ls-files -o --exclude-standard
+if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+  if has_arg "-b" $@ || has_arg "--include-branch-commits" $@; then
+    git diff --name-only $(git merge-base HEAD $(git-main-branch))
+    git ls-files -o --exclude-standard
+  else
+    git diff --name-only
+    git ls-files -o --exclude-standard
+  fi
 else
-  git diff --name-only
-  git ls-files -o --exclude-standard
+  exit 1
 fi

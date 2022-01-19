@@ -3,6 +3,23 @@
 require "#{Dir.home}/lib/optimist.rb"
 
 module TestThat
+  class ChangedFiles
+    attr_reader :include_branch_commits
+
+    def initialize(include_branch_commits)
+      @include_branch_commits = include_branch_commits
+    end
+
+    def files
+      content = if include_branch_commits
+        `git-changed-files --include-branch-commits | related-files`
+      else
+        `git-changed-files | related-files`
+      end
+      content.split.map(&:strip)
+    end
+  end
+
   module TestHarness
     class Ruby
       REQUIRE_ALL_TESTS = '-e "Dir.glob(\"**/*_test.rb\", base: \"test\"){|f| require f}"'
@@ -84,16 +101,15 @@ module TestThat
   end
 
   module CommandRunner
-    class System
+    class Execute
       def run(command)
-        system(command)
+        exec(command)
       end
     end
 
-    class Printer
+    class DryRun
       def run(command)
         puts command
-        true
       end
     end
   end
@@ -189,8 +205,8 @@ module TestThat
         Tester::Failed.new(test_harness, command_runner)
       elsif selected_tests.any?
         Tester::Selected.new(test_harness, command_runner, selected_tests)
-      elsif stream_tests.any?
-        Tester::VerboseSelected.new(test_harness, command_runner, stream_tests)
+      elsif changed_tests.any?
+        Tester::VerboseSelected.new(test_harness, command_runner, changed_tests)
       else
         Tester::Empty.new
       end
@@ -218,9 +234,9 @@ module TestThat
       @selected_tests ||= test_harness.select_tests(options[:tests])
     end
 
-    def stream_tests
-      @stream_tests ||= begin
-        files = $stdin.stat.pipe? ?  $stdin.readlines(chomp: true) : []
+    def changed_tests
+      @changed_tests ||= begin
+        files = ChangedFiles.new(options[:include_branch_commits]).files
         test_harness.select_tests(files)
       end
     end
@@ -231,9 +247,9 @@ module TestThat
 
     def command_runner
       if dry_run?
-        CommandRunner::Printer.new
+        CommandRunner::DryRun.new
       else
-        CommandRunner::System.new
+        CommandRunner::Execute.new
       end
     end
 
@@ -251,9 +267,7 @@ options = Optimist.options do
   opt :all, "Run all tests"
   opt :dry_run, "Print out test command instead of executing it"
   opt :failed, "Run previously failed tests"
-  opt :include_branch_commits, "Ignored", short: "b"
+  opt :include_branch_commits, "Include branch commits when finding changed files", short: "b"
 end
 
-runner = TestThat::TestBuilder.build(options.merge(tests: ARGV))
-success = runner.test
-exit 1 unless success
+TestThat::TestBuilder.build(options.merge(tests: ARGV)).test
