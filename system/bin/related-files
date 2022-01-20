@@ -16,10 +16,10 @@ class RelatedFileFinder
 
     def match(file, &block)
       match = regexp.match(file)
-      block.call(build_related_file(match)) if match
+      block.call(build_related_file_glob(match)) if match
     end
 
-    def build_related_file(match)
+    def build_related_file_glob(match)
       related_file_pattern.gsub(/\$(\d+)/) do |matched_param|
         match[$1.to_i]
       end
@@ -42,8 +42,8 @@ class RelatedFileFinder
 
   def related_files(file)
     patterns.each_with_object([file]) do |pattern, related|
-      pattern.match(file) do |related_file|
-        related << related_file if File.exist?(related_file)
+      pattern.match(file) do |related_file_glob|
+        related.concat(Dir.glob(related_file_glob).to_a)
       end
     end
   end
