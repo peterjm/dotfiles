@@ -55,9 +55,7 @@ module TestThat
       end
 
       def select_tests(files)
-        files
-          .select { |f| f.start_with?("test/") }
-          .select { |f| f.end_with?("_test.rb") }
+        files.grep(%r{^test/.*_test\.rb$})
       end
 
       def test_all_command
@@ -81,9 +79,7 @@ module TestThat
       end
 
       def select_tests(files)
-        files
-          .select { |f| f.start_with?("test/") }
-          .select { |f| f.end_with?("_test.rb") }
+        files.grep(%r{^test/.*_test\.rb$})
       end
 
       def test_all_command
@@ -106,9 +102,7 @@ module TestThat
       end
 
       def select_tests(files)
-        files
-          .select { |f| f.start_with?("spec/") }
-          .select { |f| f.end_with?("_spec.rb") }
+        files.grep(%r{^spec/.*_spec\.rb(:\d+)?$})
       end
 
       def test_all_command
