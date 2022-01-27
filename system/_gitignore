@@ -20,6 +20,9 @@
 # used by related-files
 .related_files_mapping.json
 
+# used by test-that
+.test_that.json
+
 # vendored gems
 .bundle/
 

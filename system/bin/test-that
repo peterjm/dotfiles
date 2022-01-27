@@ -1,8 +1,33 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 require "#{Dir.home}/lib/optimist.rb"
+require "json"
 
 module TestThat
+  class ConfigFile
+    attr_reader :filename
+
+    def initialize(filename)
+      @filename = filename
+    end
+
+    def options
+      if filename && File.exist?(filename)
+        symbolize_keys(JSON.parse(File.read(filename)))
+      else
+        {}
+      end
+    end
+
+    private
+
+    def symbolize_keys(hash)
+      hash
+        .transform_keys { |k| k.to_sym }
+        .transform_values { |v| v.is_a?(Hash) ? symbolize_keys(v) : v }
+    end
+  end
+
   class ChangedFiles
     attr_reader :include_branch_commits
 
@@ -96,6 +121,39 @@ module TestThat
 
       def test_files_command(files)
         ["rspec", *files].join(" ")
+      end
+    end
+
+    class Override
+      def initialize(config, base)
+        @config = config
+        @base = base
+      end
+
+      def enabled?
+        @base.enabled?
+      end
+
+      def select_tests(files)
+        @base.select_tests(files)
+      end
+
+      def test_all_command
+        command(:all) || @base.test_all_command
+      end
+
+      def test_failed_command
+        command(:failed) || @base.test_failed_command
+      end
+
+      def test_files_command(files)
+        command(:files)&.sub("FILES", files.join(" ")) || @base.test_files_command(files)
+      end
+
+      private
+
+      def command(command)
+        @config[:commands][command]
       end
     end
   end
@@ -194,6 +252,7 @@ module TestThat
 
     def initialize(options)
       @options = options
+      @options = ConfigFile.new(options[:config_file]).options.merge(options)
     end
 
     def build
@@ -242,7 +301,11 @@ module TestThat
     end
 
     def test_harness
-      @test_harness ||= test_harnesses.detect(&:enabled?)
+      @test_harness ||= begin
+        harness = test_harnesses.detect(&:enabled?)
+        harness = TestHarness::Override.new(options[:override], harness) if options[:override]
+        harness
+      end
     end
 
     def command_runner
@@ -268,6 +331,7 @@ options = Optimist.options do
   opt :dry_run, "Print out test command instead of executing it"
   opt :failed, "Run previously failed tests"
   opt :include_branch_commits, "Include branch commits when finding changed files", short: "b"
+  opt :config_file, "Read config from file", default: ".test_that.json"
 end
 
 TestThat::TestBuilder.build(options.merge(tests: ARGV)).test
