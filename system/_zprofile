@@ -1,0 +1,5 @@
+# this file is used to setup both non-interactive and interactive shells
+
+if [ ! -f "$HOME/.zsh/env" ]; then
+  for f in ~/.zsh/env/*.sh; do source $f; done
+fi

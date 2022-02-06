@@ -1,3 +1,5 @@
+# this file is used to setup interactive shells
+
 if [ ! -f "$HOME/.zsh" ]; then
   for f in ~/.zsh/*.sh; do source $f; done
 fi
