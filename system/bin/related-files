@@ -41,7 +41,9 @@ class RelatedFileFinder
   end
 
   def related_files(file)
-    patterns.each_with_object([file]) do |pattern, related|
+    list = []
+    list << file if File.exist?(file)
+    patterns.each_with_object(list) do |pattern, related|
       pattern.match(file) do |related_file_glob|
         related.concat(Dir.glob(related_file_glob).to_a)
       end
