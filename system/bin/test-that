@@ -55,7 +55,7 @@ module TestThat
       end
 
       def select_tests(files)
-        files.grep(%r{^test/.*_test\.rb$})
+        files.flat_map { |f| Dir.exist?(f) ? Dir.glob(File.join(f, "**/*_test.rb").to_s) : f }.grep(%r{^test/.*_test\.rb$})
       end
 
       def test_all_command
@@ -102,7 +102,7 @@ module TestThat
       end
 
       def select_tests(files)
-        files.grep(%r{^spec/.*_spec\.rb(:\d+)?$})
+        files.flat_map { |f| Dir.exist?(f) ? Dir.glob(File.join(f, "**/*_spec.rb").to_s) : f }.grep(%r{^spec/.*_spec\.rb(:\d+)?$})
       end
 
       def test_all_command
