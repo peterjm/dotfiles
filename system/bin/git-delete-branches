@@ -4,7 +4,11 @@ CURRENT_BRANCH=`git-current-branch`
 MAIN_BRANCH=`git-main-branch`
 
 if [ "$CURRENT_BRANCH" == "$MAIN_BRANCH" ]; then
-  git branch --merged | grep -v "\*" | xargs git branch -d
+  if [ "$1" == "--all" ]; then
+    git branch | grep -v "$MAIN_BRANCH" | xargs git branch -D
+  else
+    git branch --merged | grep -v "$MAIN_BRANCH" | xargs git branch -d
+  fi
 elif [ "$1" == "--force" ]; then
   git branch --merged | grep -v "\*" | grep -v "$MAIN_BRANCH" | xargs git branch -d
 else
