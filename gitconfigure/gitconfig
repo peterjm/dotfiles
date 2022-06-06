@@ -1,9 +1,7 @@
 alias.s status
 alias.stats status
-alias.ci commit
 alias.br branch
-alias.co checkout
-alias.d diff
+alias.sw switch
 alias.lg "log -p"
 alias.hist "log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short"
 alias.type "cat-file -t"
