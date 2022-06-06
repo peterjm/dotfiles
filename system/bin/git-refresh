@@ -11,8 +11,8 @@ fi
 if [ "$CURRENT_BRANCH" == "$MAIN_BRANCH" ]; then
   git pull
 else
-  git checkout $MAIN_BRANCH
+  git switch $MAIN_BRANCH
   git pull
-  git checkout $CURRENT_BRANCH
+  git switch $CURRENT_BRANCH
   git rebase $MAIN_BRANCH
 fi
