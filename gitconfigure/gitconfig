@@ -20,6 +20,7 @@ init.defaultBranch main
 apply.whitespace strip
 
 push.default simple
+push.autoSetupRemote true
 
 pull.rebase true
 
