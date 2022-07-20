@@ -34,6 +34,7 @@ DOWNLOAD_OPTIMIST = CurlDownload.new(
   dest: PathHelper.home_path("lib/optimist.rb")
 )
 SYSTEM_PACKAGES = [
+  "git",
   "bash-completion",
   "zsh-completions",
   "the_silver_searcher",
