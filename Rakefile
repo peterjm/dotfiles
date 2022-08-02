@@ -16,17 +16,17 @@ DOWNLOAD_GIT_PROMPT = CurlDownload.new(
   dest: PathHelper.home_path(".zsh/020_git_prompt.sh")
 )
 DOWNLOAD_GIT_FREEZE = CurlDownload.new(
-  url: "https://raw.githubusercontent.com/peterjm/git-freeze/master/git-freeze",
+  url: "https://raw.githubusercontent.com/peterjm/git-freeze/main/git-freeze",
   dest: PathHelper.home_path("bin/git-freeze"),
   executable: true
 )
 DOWNLOAD_GIT_THAW = CurlDownload.new(
-  url: "https://raw.githubusercontent.com/peterjm/git-freeze/master/git-thaw",
+  url: "https://raw.githubusercontent.com/peterjm/git-freeze/main/git-thaw",
   dest: PathHelper.home_path("bin/git-thaw"),
   executable: true
 )
 DOWNLOAD_GIT_FREEZE_PROMPT = CurlDownload.new(
-  url: "https://raw.githubusercontent.com/peterjm/git-freeze/master/git-freeze.sh",
+  url: "https://raw.githubusercontent.com/peterjm/git-freeze/main/git-freeze.sh",
   dest: PathHelper.home_path("lib/git-freeze.sh")
 )
 DOWNLOAD_OPTIMIST = CurlDownload.new(
