@@ -4,8 +4,9 @@
 # per-project vim settings
 .lvimrc
 
-# local POW config
+# local POW/puma-dev config
 .powenv
+.pumaenv
 
 # configuration for Ack
 .ackrc
