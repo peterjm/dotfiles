@@ -32,7 +32,7 @@ set visualbell                  " disable audible bell
 let mapleader = ","             " map <Leader> to command
 
 set showcmd                     " display incomplete commands
-set number
+set number                      " display line numbers by default
 set cursorline                  " highlight the current line
 set list                        " show invisible characters
 
@@ -116,6 +116,8 @@ vnoremap . :normal.<CR>
 
 " shortcut to use the 'q' macro
 nmap <space> @q
+
+nmap <leader>n :set invnumber<CR>
 
 "" Plugins
 
