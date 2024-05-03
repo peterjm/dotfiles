@@ -3,16 +3,14 @@
 CURRENT_BRANCH=`git-current-branch`
 
 if [ -n "$1" ]; then
-  MAIN_BRANCH=$1
+  BASE_BRANCH=$1
 else
-  MAIN_BRANCH=`git-main-branch`
+  BASE_BRANCH=`git-main-branch`
 fi
 
-if [ "$CURRENT_BRANCH" == "$MAIN_BRANCH" ]; then
+if [ "$CURRENT_BRANCH" == "$BASE_BRANCH" ]; then
   git pull
 else
-  git switch $MAIN_BRANCH
-  git pull
-  git switch $CURRENT_BRANCH
-  git rebase $MAIN_BRANCH
+  git fetch . origin/$BASE_BRANCH:$BASE_BRANCH
+  git rebase $BASE_BRANCH
 fi
