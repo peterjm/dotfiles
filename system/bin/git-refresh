@@ -11,6 +11,6 @@ fi
 if [ "$CURRENT_BRANCH" == "$BASE_BRANCH" ]; then
   git pull
 else
-  git fetch . origin/$BASE_BRANCH:$BASE_BRANCH
+  git fetch origin $BASE_BRANCH:$BASE_BRANCH
   git rebase $BASE_BRANCH
 fi
