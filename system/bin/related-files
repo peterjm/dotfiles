@@ -6,23 +6,22 @@ class RelatedFileFinder
   attr_reader :pattern_map
 
   class Pattern
-    attr_reader :regexp
-    attr_reader :related_file_pattern
+    attr_reader :regexp, :related_file_pattern
 
     def initialize(regexp, related_file_pattern)
       @regexp = regexp
       @related_file_pattern = related_file_pattern
     end
 
-    def match(file, &block)
+    def match(file)
       match = regexp.match(file)
-      block.call(build_related_file_glob(match)) if match
+      yield build_related_file_glob(match) if match
     end
 
+    private
+
     def build_related_file_glob(match)
-      related_file_pattern.gsub(/\$(\d+)/) do |matched_param|
-        match[$1.to_i]
-      end
+      related_file_pattern.gsub(/\$(\d+)/) { |matched_param| match[$1.to_i] }
     end
   end
 
@@ -41,34 +40,35 @@ class RelatedFileFinder
   end
 
   def related_files(file)
-    list = []
-    list << file if File.exist?(file)
-    patterns.each_with_object(list) do |pattern, related|
+    return [] unless File.exist?(file)
+
+    patterns.each_with_object([file]) do |pattern, related|
       pattern.match(file) do |related_file_glob|
-        related.concat(Dir.glob(related_file_glob).to_a)
+        related.concat(Dir.glob(related_file_glob))
       end
     end
   end
 
+  private
+
   def patterns
-    @patterns ||= pattern_map.each_with_object([]) do |(regexp_str, related_list), list|
+    @patterns ||= pattern_map.flat_map do |regexp_str, related_list|
       regexp = Regexp.new(regexp_str)
-      related_list.each do |related|
-        list << Pattern.new(regexp, related)
-      end
+      related_list.map { |related| Pattern.new(regexp, related) }
     end
   end
+end
+
+def load_files_from_stdin
+  $stdin.stat.pipe? ? $stdin.readlines(chomp: true) : []
 end
 
 finder = RelatedFileFinder.new
 finder.load_config(File.join(Dir.home, ".related_files_mapping.json"))
 finder.load_config(".related_files_mapping.json")
 
-files = $stdin.stat.pipe? ?  $stdin.readlines(chomp: true) : []
+files = load_files_from_stdin
 
-related_files = files.each_with_object([]) do |file, list|
-  related = finder.related_files(file)
-  list.concat(related)
-end
+related_files = files.flat_map { |file| finder.related_files(file) }.uniq
 
-related_files.uniq.each { |file| puts file }
+related_files.each { |file| puts file }
