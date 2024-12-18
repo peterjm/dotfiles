@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require "#{Dir.home}/lib/optimist.rb"
 require 'json'
 
 class RelatedFileFinder
@@ -25,17 +26,16 @@ class RelatedFileFinder
     end
   end
 
-  def initialize(config = {})
-    @pattern_map = config
+  def initialize
+    @pattern_map = Hash.new { |h,k| h[k] = [] }
   end
 
   def load_config(filename)
     return unless File.exist?(filename)
 
     config = JSON.parse(File.read(filename))
-    config.each do |base, related|
-      pattern_map[base] ||= []
-      pattern_map[base] += Array(related)
+    config.each do |p|
+      pattern_map[p["src"]] << p["dest"]
     end
   end
 
@@ -63,12 +63,22 @@ def load_files_from_stdin
   $stdin.stat.pipe? ? $stdin.readlines(chomp: true) : []
 end
 
+options = Optimist.options do
+  opt :stdin, "Read list of files from stdin"
+  opt :number, "The number of related files to return", type: :integer
+  opt :workspace, "The base directory for parsing the files", type: :string
+  opt :exclude_self, "Whether to include the file itself in the list of related files"
+end
+
 finder = RelatedFileFinder.new
 finder.load_config(File.join(Dir.home, ".related_files_mapping.json"))
 finder.load_config(".related_files_mapping.json")
 
-files = load_files_from_stdin
+files = options[:stdin] ? load_files_from_stdin : ARGV
+Dir.chdir(options[:workspace]) if options[:workspace]
 
 related_files = files.flat_map { |file| finder.related_files(file) }.uniq
+related_files -= files if options[:exclude_self]
+related_files = related_files.take(options[:number]) if options[:number]
 
 related_files.each { |file| puts file }

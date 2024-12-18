@@ -1,6 +1,18 @@
-{
-  "app/(.*).rb": [
-    "test/$1_test.rb",
-    "spec/$1_spec.rb"
-  ]
-}
+[
+  {
+    "src": "app/(.*).rb",
+    "dest": "test/$1_test.rb"
+  },
+  {
+    "src": "test/(.*)_test.rb",
+    "dest": "app/$1.rb"
+  },
+  {
+    "src": "app/(.*).rb",
+    "dest": "spec/$1_spec.rb"
+  },
+  {
+    "src": "spec/(.*)_spec.rb",
+    "dest": "app/$1.rb"
+  }
+]
