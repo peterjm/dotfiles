@@ -66,7 +66,6 @@ end
 options = Optimist.options do
   opt :stdin, "Read list of files from stdin"
   opt :number, "The number of related files to return", type: :integer
-  opt :workspace, "The base directory for parsing the files", type: :string
   opt :exclude_self, "Whether to include the file itself in the list of related files"
 end
 
@@ -75,7 +74,6 @@ finder.load_config(File.join(Dir.home, ".related_files_mapping.json"))
 finder.load_config(".related_files_mapping.json")
 
 files = options[:stdin] ? load_files_from_stdin : ARGV
-Dir.chdir(options[:workspace]) if options[:workspace]
 
 related_files = files.flat_map { |file| finder.related_files(file) }.uniq
 related_files -= files if options[:exclude_self]
