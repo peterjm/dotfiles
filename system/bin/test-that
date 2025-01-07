@@ -215,8 +215,12 @@ module TestThat
       private
 
       def print_tests
-        puts "Running tests for:"
-        tests_to_run.each { |f| puts "  #{f}" }
+        if tests_to_run.size > 1
+          puts "Running tests for:"
+          tests_to_run.each { |f| puts "  #{f}" }
+        else
+          puts "Running tests for #{tests_to_run.first}"
+        end
       end
     end
 
