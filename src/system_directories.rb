@@ -8,7 +8,6 @@ class SystemDirectories
   def directories
     [
       PathHelper.dotfiles_path(path),
-      (PathHelper.dotfiles_path("per_host_config", path, computer_name) unless computer_name.nil?),
       PathHelper.dropbox_path("dotfiles", path, "common"),
       (PathHelper.dropbox_path("dotfiles", path, computer_name) unless computer_name.nil?)
     ].compact
