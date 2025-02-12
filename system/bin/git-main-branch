@@ -1,7 +1,8 @@
 #!/bin/bash
 
-if [ -f .git-main-branch ]; then
-  echo `cat .git-main-branch`
+GIT_MAIN_BRANCH_FILE="$(git-root)/.git-main-branch"
+if [ -f "$GIT_MAIN_BRANCH_FILE" ]; then
+  echo `cat $GIT_MAIN_BRANCH_FILE`
 else
   echo "main"
 fi
