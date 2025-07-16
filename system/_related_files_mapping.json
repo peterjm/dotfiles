@@ -14,5 +14,21 @@
   {
     "src": "spec/(.*)_spec.rb",
     "dest": "app/$1.rb"
+  },
+  {
+    "src": "src/(.*)/(.*).py",
+    "dest": "src/$1/tests/$2_test.py"
+  },
+  {
+    "src": "src/(.*)/(.*).py",
+    "dest": "src/$1/tests/test_$2.py"
+  },
+  {
+    "src": "src/(.*)/tests/(.*)_test.py",
+    "dest": "src/$1/$2.py"
+  },
+  {
+    "src": "src/(.*)/tests/test_(.*).py",
+    "dest": "src/$1/$2.py"
   }
 ]
