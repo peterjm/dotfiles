@@ -1,34 +1,39 @@
 [
   {
-    "src": "app/(.*).rb",
+    "src": "app/(.+).rb",
     "dest": "test/$1_test.rb"
   },
   {
-    "src": "test/(.*)_test.rb",
+    "src": "test/(.+)_test.rb",
     "dest": "app/$1.rb"
   },
   {
-    "src": "app/(.*).rb",
+    "src": "app/(.+).rb",
     "dest": "spec/$1_spec.rb"
   },
   {
-    "src": "spec/(.*)_spec.rb",
+    "src": "spec/(.+)_spec.rb",
     "dest": "app/$1.rb"
   },
   {
-    "src": "src/(.*)/(.*).py",
-    "dest": "src/$1/tests/$2_test.py"
+    "src": "(.*)/(.+).py",
+    "dest": "$1/tests/$2_test.py"
   },
   {
-    "src": "src/(.*)/(.*).py",
-    "dest": "src/$1/tests/test_$2.py"
+    "src": "(.*)/tests/(.+)_test.py",
+    "dest": "$1/$2.py"
   },
   {
-    "src": "src/(.*)/tests/(.*)_test.py",
-    "dest": "src/$1/$2.py"
+    "src": "(.*)/(.+).py",
+    "dest": "$1/tests/test_$2.py"
   },
   {
-    "src": "src/(.*)/tests/test_(.*).py",
-    "dest": "src/$1/$2.py"
+    "src": "(.*)/tests/test_(.+).py",
+    "dest": "$1/$2.py"
+  },
+  {
+    "_comment": "In python packages, the package directory is conventionally not included under the tests directory",
+    "src": "(.*)/src/(.+)/(.+).py",
+    "dest": "$1/tests/test_$3.py"
   }
 ]
