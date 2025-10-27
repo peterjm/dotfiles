@@ -132,7 +132,7 @@ module TestThat
     end
 
     class UvPython
-      TEST_REGEX = %r{(.*_test|test_.*)\.py$}
+      TEST_REGEX = %r{([^/]+_test|test_[^/]+)\.py$}
 
       def enabled?
         File.exist?("py/pyproject.toml")
