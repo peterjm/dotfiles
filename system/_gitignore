@@ -31,3 +31,6 @@ ehthumbs.db
 
 .ai_brainstorm
 .claude/
+
+# used by rex @ Artificial Agency
+experiment_results
