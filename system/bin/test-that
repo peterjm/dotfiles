@@ -96,7 +96,7 @@ module TestThat
       end
 
       def test_all_command
-        "rails test"
+        "rails test:all"
       end
 
       def test_failed_command
