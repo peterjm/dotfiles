@@ -12,7 +12,6 @@ Plug 'tpope/vim-rails'
 Plug 'janko/vim-test'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
-Plug 'peterjm/gitignore.vim'
 Plug 'vim-scripts/localvimrc'
 Plug 'tpope/vim-fugitive'
 
@@ -55,8 +54,6 @@ set smartcase                   " ... unless they contain at least one capital l
 
 set pastetoggle=<F10>           " F10 to toggle paste mode
 
-" also update the list in .ignore_for_fzf
-set wildignore+=*.gif,*.png,*.jpg,*.jpeg,*.bmp,*.tiff,*.psd,*.svg,*.woff,*.woff2,*.eot,*.ttf
 
 if has("autocmd")
   "" Filetypes
