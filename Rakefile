@@ -28,10 +28,6 @@ DOWNLOAD_GIT_FREEZE_PROMPT = CurlDownload.new(
   url: "https://raw.githubusercontent.com/peterjm/git-freeze/main/git-freeze.sh",
   dest: PathHelper.home_path("lib/git-freeze.sh")
 )
-DOWNLOAD_OPTIMIST = CurlDownload.new(
-  url: "https://raw.githubusercontent.com/ManageIQ/optimist/master/lib/optimist.rb",
-  dest: PathHelper.home_path("lib/optimist.rb")
-)
 RUBY_GEMS = [
   "light_me_up"
 ].each_with_object({}) { |gem_name, map| map[gem_name.gsub("-", "_")] = gem_name }
@@ -40,7 +36,6 @@ task default: %i[
   install_system_packages
   install_git_freeze
   install_latest_ruby
-  download_optimist
   download_git_prompt
   gitconfig
   link
@@ -56,7 +51,6 @@ task update: %i[
 
 task clean: %i[
   uninstall_gems
-  delete_optimist
   delete_git_prompt
   uninstall_git_freeze
   delete_vim_plug
@@ -112,14 +106,6 @@ end
 
 task :delete_git_prompt do
   DOWNLOAD_GIT_PROMPT.clean
-end
-
-task :download_optimist do
-  DOWNLOAD_OPTIMIST.install
-end
-
-task :delete_optimist do
-  DOWNLOAD_OPTIMIST.clean
 end
 
 task :install_latest_ruby do

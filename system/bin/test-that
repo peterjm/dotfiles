@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
-require "#{Dir.home}/lib/optimist.rb"
+require "optparse"
 require "json"
 
 module TestThat
@@ -382,12 +382,14 @@ module TestThat
   end
 end
 
-options = Optimist.options do
-  opt :all, "Run all tests"
-  opt :dry_run, "Print out test command instead of executing it"
-  opt :failed, "Run previously failed tests"
-  opt :include_branch_commits, "Include branch commits when finding changed files", short: "b"
-  opt :config_file, "Read config from file", default: ".test_that.json"
-end
+options = { config_file: ".test_that.json" }
+OptionParser.new do |opts|
+  opts.banner = "Usage: test-that [options] [files...]"
+  opts.on("-a", "--all", "Run all tests") { options[:all] = true }
+  opts.on("-d", "--dry-run", "Print out test command instead of executing it") { options[:dry_run] = true }
+  opts.on("-f", "--failed", "Run previously failed tests") { options[:failed] = true }
+  opts.on("-b", "--include-branch-commits", "Include branch commits when finding changed files") { options[:include_branch_commits] = true }
+  opts.on("-c", "--config-file FILE", "Read config from file") { |f| options[:config_file] = f }
+end.parse!
 
 TestThat::TestBuilder.build(options.merge(tests: ARGV)).test

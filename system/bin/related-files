@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-require "#{Dir.home}/lib/optimist.rb"
-require 'json'
+require "optparse"
+require "json"
 
 class RelatedFileFinder
   attr_reader :pattern_map
@@ -63,11 +63,13 @@ def load_files_from_stdin
   $stdin.stat.pipe? ? $stdin.readlines(chomp: true) : []
 end
 
-options = Optimist.options do
-  opt :stdin, "Read list of files from stdin"
-  opt :number, "The number of related files to return", type: :integer
-  opt :exclude_self, "Whether to include the file itself in the list of related files"
-end
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: related-files [options] [files...]"
+  opts.on("-s", "--stdin", "Read list of files from stdin") { options[:stdin] = true }
+  opts.on("-n", "--number N", Integer, "The number of related files to return") { |n| options[:number] = n }
+  opts.on("-x", "--exclude-self", "Whether to include the file itself in the list of related files") { options[:exclude_self] = true }
+end.parse!
 
 finder = RelatedFileFinder.new
 finder.load_config(File.join(Dir.home, ".related_files_mapping.json"))
