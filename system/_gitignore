@@ -1,18 +1,10 @@
-# environment variables set via rbenv
-.rbenv-vars
-
 # per-project vim settings
 .lvimrc
 
-# local POW/puma-dev config
-.powenv
+# local puma-dev config
 .pumaenv
 
-# configuration for Ack
-.ackrc
-
-# configuration for The Silver Searcher
-.agignore
+# configuration for ripgrep
 .ignore
 
 # used by git-refresh
