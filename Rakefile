@@ -1,7 +1,6 @@
 require './src/path_helper'
 require './src/system_directories'
 require './src/curl_download'
-require './src/system_installer'
 require './src/git_configurator'
 require './src/file_linker'
 require './src/file_saver'
@@ -33,17 +32,6 @@ DOWNLOAD_OPTIMIST = CurlDownload.new(
   url: "https://raw.githubusercontent.com/ManageIQ/optimist/master/lib/optimist.rb",
   dest: PathHelper.home_path("lib/optimist.rb")
 )
-SYSTEM_PACKAGES = [
-  "git",
-  "bash-completion",
-  "zsh-completions",
-  "ripgrep",
-  "fzf",
-  "ruby-install",
-  "chruby",
-  "jq",
-  "gh",
-].each_with_object({}) { |package_name, map| map[package_name.gsub("-", "_")] = package_name }
 RUBY_GEMS = [
   "light_me_up"
 ].each_with_object({}) { |gem_name, map| map[gem_name.gsub("-", "_")] = gem_name }
@@ -76,12 +64,8 @@ task clean: %i[
   unlink
 ]
 
-task install_system_packages: SYSTEM_PACKAGES.keys.map { |package| "install_#{package}" }
-
-SYSTEM_PACKAGES.each do |task_name, package_name|
-  task "install_#{task_name}" do
-    SystemInstaller.for(package_name).check_and_install
-  end
+task :install_system_packages do
+  sh "brew bundle --file=Brewfile"
 end
 
 task install_gems: RUBY_GEMS.keys.map { |gem| "install_#{gem}_gem" }
