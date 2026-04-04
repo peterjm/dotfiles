@@ -37,7 +37,7 @@ SYSTEM_PACKAGES = [
   "git",
   "bash-completion",
   "zsh-completions",
-  "the_silver_searcher",
+  "ripgrep",
   "fzf",
   "ruby-install",
   "chruby",

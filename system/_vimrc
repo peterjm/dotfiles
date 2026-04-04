@@ -5,7 +5,6 @@ call plug#begin('~/.vim/plugged')
 
 " Declare the list of plugins.
 Plug 'tpope/vim-sensible'
-Plug 'mileszs/ack.vim'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'vim-ruby/vim-ruby'
@@ -121,21 +120,15 @@ nmap <leader>n :set invnumber<CR>
 
 "" Plugins
 
-" Ack
-nmap <leader>f :Ack<space>
-
-if executable('ag')
-  " use ag instead of grep, if available
-  set grepprg=ag\ --nogroup\ --nocolor
-
-  " use ag instead of ack, if available
-  let g:ackprg = 'ag --nogroup --column'
+" Ripgrep
+if executable('rg')
+  set grepprg=rg\ --vimgrep\ --smart-case
 endif
 
-if executable('fzf')
-  set rtp+=/usr/local/opt/fzf
-  nmap <C-P> :Files<CR>
-endif
+" FZF
+nmap <C-P> :Files<CR>
+command! -nargs=+ Rgrep silent grep! <args> | copen | redraw!
+nmap <leader>f :Rgrep<space>
 
 " NERDTree
 nmap <silent> <C-D> :NERDTreeToggle<CR>
