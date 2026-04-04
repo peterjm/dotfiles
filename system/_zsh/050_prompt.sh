@@ -1,3 +1,5 @@
+source_if_exists "$HOMEBREW_PREFIX/etc/bash_completion.d/git-prompt.sh"
+
 # If I am root, set the prompt to bright red
 if [ ${UID} -eq 0 ]; then PROMPT_COLOUR="%F{red}" ; fi
 # Default to yellow if the colour isn't already set

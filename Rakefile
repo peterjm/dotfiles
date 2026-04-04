@@ -10,10 +10,6 @@ DOWNLOAD_VIM_PLUG = CurlDownload.new(
   url: "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim",
   dest: PathHelper.home_path(".vim/autoload/plug.vim")
 )
-DOWNLOAD_GIT_PROMPT = CurlDownload.new(
-  url: "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh",
-  dest: PathHelper.home_path(".zsh/020_git_prompt.sh")
-)
 DOWNLOAD_GIT_FREEZE = CurlDownload.new(
   url: "https://raw.githubusercontent.com/peterjm/git-freeze/main/git-freeze",
   dest: PathHelper.home_path("bin/git-freeze"),
@@ -36,7 +32,6 @@ task default: %i[
   install_system_packages
   install_git_freeze
   install_latest_ruby
-  download_git_prompt
   gitconfig
   link
   download_vim_plug
@@ -51,7 +46,6 @@ task update: %i[
 
 task clean: %i[
   uninstall_gems
-  delete_git_prompt
   uninstall_git_freeze
   delete_vim_plug
   delete_vim_plugins
@@ -98,14 +92,6 @@ task :update_vim_plugins => :install_vim_plugins
 
 task :delete_vim_plugins do
   rm_rf PathHelper.home_path(".vim/plugged")
-end
-
-task :download_git_prompt do
-  DOWNLOAD_GIT_PROMPT.install
-end
-
-task :delete_git_prompt do
-  DOWNLOAD_GIT_PROMPT.clean
 end
 
 task :install_latest_ruby do
