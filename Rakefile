@@ -36,11 +36,6 @@ task default: %i[
   link
   download_vim_plug
   install_vim_plugins
-  install_gems
-]
-
-task update: %i[
-  update_vim_plugins
   update_gems
 ]
 
