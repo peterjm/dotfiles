@@ -37,6 +37,7 @@ task default: %i[
   download_vim_plug
   install_vim_plugins
   update_gems
+  setup_ssh_key
 ]
 
 task clean: %i[
@@ -46,6 +47,17 @@ task clean: %i[
   delete_vim_plugins
   unlink
 ]
+
+task :setup_ssh_key do
+  key_path = PathHelper.home_path(".ssh/id_ed25519")
+  if File.exist?(key_path)
+    puts "SSH key already exists at #{key_path}"
+  else
+    sh "ssh-keygen -t ed25519 -f #{key_path} -N ''"
+    puts "\nSSH key generated. Add it to GitHub with:"
+    puts "  gh ssh-key add #{key_path}.pub"
+  end
+end
 
 task :install_system_packages do
   sh "brew bundle --file=Brewfile"
