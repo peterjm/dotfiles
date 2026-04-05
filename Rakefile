@@ -6,10 +6,6 @@ require './src/file_linker'
 require './src/file_saver'
 require './src/ruby_helper'
 
-DOWNLOAD_VIM_PLUG = CurlDownload.new(
-  url: "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim",
-  dest: PathHelper.home_path(".vim/autoload/plug.vim")
-)
 DOWNLOAD_GIT_FREEZE = CurlDownload.new(
   url: "https://raw.githubusercontent.com/peterjm/git-freeze/main/git-freeze",
   dest: PathHelper.home_path("bin/git-freeze"),
@@ -34,8 +30,7 @@ task default: %i[
   install_latest_ruby
   gitconfig
   link
-  download_vim_plug
-  install_vim_plugins
+  install_nvim_plugins
   update_gems
   setup_ssh_key
 ]
@@ -43,8 +38,7 @@ task default: %i[
 task clean: %i[
   uninstall_gems
   uninstall_git_freeze
-  delete_vim_plug
-  delete_vim_plugins
+  delete_nvim_plugins
   unlink
 ]
 
@@ -83,22 +77,12 @@ RUBY_GEMS.each do |task_name, gem_name|
   end
 end
 
-task :download_vim_plug do
-  DOWNLOAD_VIM_PLUG.install
+task :install_nvim_plugins do
+  sh 'nvim --headless "+Lazy! sync" +qa'
 end
 
-task :delete_vim_plug do
-  DOWNLOAD_VIM_PLUG.clean
-end
-
-task :install_vim_plugins do
-  sh "vim +'PlugInstall --sync' +qa"
-end
-
-task :update_vim_plugins => :install_vim_plugins
-
-task :delete_vim_plugins do
-  rm_rf PathHelper.home_path(".vim/plugged")
+task :delete_nvim_plugins do
+  rm_rf PathHelper.home_path(".local/share/nvim/lazy")
 end
 
 task :install_latest_ruby do

@@ -1,3 +1,4 @@
+brew "neovim"
 brew "git"
 brew "bash-completion"
 brew "zsh-completions"
