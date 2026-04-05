@@ -24,8 +24,12 @@ map("n", "<leader>h", ":RubyHashConvert<CR>")
 
 -- Grep with quickfix
 vim.api.nvim_create_user_command("Rgrep", function(opts)
-  vim.cmd("silent grep! " .. opts.args)
+  local query = opts.args
+  if query == "" then
+    query = vim.fn.expand("<cword>")
+  end
+  vim.cmd("silent grep! " .. query)
   vim.cmd("copen")
   vim.cmd("redraw!")
-end, { nargs = "+" })
+end, { nargs = "?" })
 map("n", "<leader>f", ":Rgrep<space>")
