@@ -24,6 +24,16 @@ RUBY_GEMS = [
   "light_me_up"
 ].each_with_object({}) { |gem_name, map| map[gem_name.gsub("-", "_")] = gem_name }
 
+SETUP_DIR = PathHelper.home_path(".setup")
+
+def reminder(key, message)
+  marker = File.join(SETUP_DIR, ".#{key}")
+  return if File.exist?(marker)
+
+  puts "\n[setup] #{message}"
+  puts "        To suppress this reminder: touch #{marker}"
+end
+
 task default: %i[
   install_system_packages
   install_git_freeze
@@ -33,6 +43,7 @@ task default: %i[
   install_nvim_plugins
   update_gems
   setup_ssh_key
+  reminders
 ]
 
 task clean: %i[
@@ -55,6 +66,11 @@ end
 
 task :install_system_packages do
   sh "brew bundle --file=Brewfile"
+end
+
+task :reminders do
+  FileUtils.mkdir_p(SETUP_DIR)
+  reminder "nerd_font", "Set your terminal font to 'MesloLGS Nerd Font' in Terminal > Settings > Profiles > Font"
 end
 
 task install_gems: RUBY_GEMS.keys.map { |gem| "install_#{gem}_gem" }
