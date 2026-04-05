@@ -4,7 +4,9 @@ require './src/curl_download'
 require './src/git_configurator'
 require './src/file_linker'
 require './src/file_saver'
-require './src/ruby_helper'
+require './src/local_gem_installer'
+
+SETUP_DIR = PathHelper.home_path(".dotfiles_setup")
 
 DOWNLOAD_GIT_FREEZE = CurlDownload.new(
   url: "https://raw.githubusercontent.com/peterjm/git-freeze/main/git-freeze",
@@ -20,14 +22,17 @@ DOWNLOAD_GIT_FREEZE_PROMPT = CurlDownload.new(
   url: "https://raw.githubusercontent.com/peterjm/git-freeze/main/git-freeze.sh",
   dest: PathHelper.home_path("lib/git-freeze.sh")
 )
-RUBY_GEMS = [
-  "light_me_up"
-].each_with_object({}) { |gem_name, map| map[gem_name.gsub("-", "_")] = gem_name }
-
-SETUP_DIR = PathHelper.home_path(".setup")
+LOCAL_GEMS = [
+  LocalGemInstaller.new(
+    name: "light_me_up",
+    repo: "git@github.com:peterjm/light_me_up.git",
+    path: PathHelper.home_path("src/light_me_up"),
+    setup_dir: SETUP_DIR,
+  ),
+]
 
 def reminder(key, message)
-  marker = File.join(SETUP_DIR, ".#{key}")
+  marker = File.join(SETUP_DIR, key)
   return if File.exist?(marker)
 
   puts "\n[setup] #{message}"
@@ -41,13 +46,12 @@ task default: %i[
   gitconfig
   link
   install_nvim_plugins
-  update_gems
+  update_local_gems
   setup_ssh_key
   reminders
 ]
 
 task clean: %i[
-  uninstall_gems
   uninstall_git_freeze
   delete_nvim_plugins
   unlink
@@ -73,23 +77,11 @@ task :reminders do
   reminder "nerd_font", "Set your terminal font to 'MesloLGS Nerd Font' in Terminal > Settings > Profiles > Font"
 end
 
-task install_gems: RUBY_GEMS.keys.map { |gem| "install_#{gem}_gem" }
+task update_local_gems: LOCAL_GEMS.map { |gem| "update_#{gem.name}" }
 
-task update_gems: RUBY_GEMS.keys.map { |gem| "update_#{gem}_gem" }
-
-task uninstall_gems: RUBY_GEMS.keys.map { |gem| "uninstall_#{gem}_gem" }
-
-RUBY_GEMS.each do |task_name, gem_name|
-  task "install_#{task_name}_gem" do
-    RubyHelper.new.install_gem(gem_name)
-  end
-
-  task "update_#{task_name}_gem" do
-    RubyHelper.new.update_gem(gem_name)
-  end
-
-  task "uninstall_#{task_name}_gem" do
-    RubyHelper.new.uninstall_gem(gem_name)
+LOCAL_GEMS.each do |gem|
+  task "update_#{gem.name}" do
+    gem.update
   end
 end
 
@@ -102,7 +94,12 @@ task :delete_nvim_plugins do
 end
 
 task :install_latest_ruby do
-  RubyHelper.new.install_ruby
+  installed_rubies = Dir.glob(PathHelper.home_path(".rubies/*"))
+  if installed_rubies.any?
+    puts "Ruby already installed: #{File.basename(installed_rubies.last)}"
+  else
+    sh "ruby-install ruby --no-reinstall"
+  end
 end
 
 task install_git_freeze: %i[
