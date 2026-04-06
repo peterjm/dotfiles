@@ -1,0 +1,26 @@
+{
+  "//": "Heuristics format: outer keys are file/dir markers that identify project type. Unlike .projections.json, this is NOT a flat glob-to-options mapping.",
+
+  "Gemfile&test/": {
+    "lib/*.rb": { "alternate": "test/{}_test.rb" },
+    "test/*_test.rb": { "alternate": "lib/{}.rb" },
+    "app/models/*.rb": { "alternate": "test/models/{}_test.rb" },
+    "test/models/*_test.rb": { "alternate": "app/models/{}.rb" },
+    "app/controllers/*.rb": { "alternate": "test/controllers/{}_test.rb" },
+    "test/controllers/*_test.rb": { "alternate": "app/controllers/{}.rb" }
+  },
+
+  "Gemfile&spec/": {
+    "lib/*.rb": { "alternate": "spec/{}_spec.rb" },
+    "spec/*_spec.rb": { "alternate": "lib/{}.rb" },
+    "app/models/*.rb": { "alternate": "spec/models/{}_spec.rb" },
+    "spec/models/*_spec.rb": { "alternate": "app/models/{}.rb" },
+    "app/controllers/*.rb": { "alternate": "spec/controllers/{}_spec.rb" },
+    "spec/controllers/*_spec.rb": { "alternate": "app/controllers/{}.rb" }
+  },
+
+  "py/pyproject.toml": {
+    "py/src/*.py": { "alternate": "py/tests/{}_test.py" },
+    "py/tests/*_test.py": { "alternate": "py/src/{}.py" }
+  }
+}
