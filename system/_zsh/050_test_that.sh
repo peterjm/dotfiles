@@ -1,0 +1,1 @@
+alias tt="test-that"

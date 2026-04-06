@@ -29,6 +29,18 @@ LOCAL_GEMS = [
     path: PathHelper.home_path("src/light_me_up"),
     setup_dir: SETUP_DIR,
   ),
+  LocalGemInstaller.new(
+    name: "related_files",
+    repo: "git@github.com:peterjm/related-files.git",
+    path: PathHelper.home_path("src/related-files"),
+    setup_dir: SETUP_DIR,
+  ),
+  LocalGemInstaller.new(
+    name: "test_that",
+    repo: "git@github.com:peterjm/test-that.git",
+    path: PathHelper.home_path("src/test-that"),
+    setup_dir: SETUP_DIR,
+  ),
 ]
 
 def reminder(key, message)
