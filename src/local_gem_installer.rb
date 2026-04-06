@@ -41,13 +41,8 @@ class LocalGemInstaller
   end
 
   def build_and_install
-    gemspec = Dir.glob("#{path}/*.gemspec").first
-    return unless gemspec
-
     Dir.chdir(path) do
-      sh "gem build #{File.basename(gemspec)} -o #{name}.gem"
-      sh "gem install #{name}.gem --bindir #{PathHelper.home_path('bin')}"
-      rm "#{name}.gem"
+      sh "rake install"
     end
   end
 
