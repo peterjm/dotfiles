@@ -110,7 +110,7 @@ task :install_latest_ruby do
   if installed_rubies.any?
     puts "Ruby already installed: #{File.basename(installed_rubies.last)}"
   else
-    sh "ruby-install ruby --no-reinstall"
+    sh "ruby-install ruby --no-reinstall --cleanup"
   end
 end
 
