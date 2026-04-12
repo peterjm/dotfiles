@@ -110,8 +110,12 @@ task :install_latest_ruby do
   if installed_rubies.any?
     puts "Ruby already installed: #{File.basename(installed_rubies.last)}"
   else
-    sh "ruby-install ruby --no-reinstall --cleanup"
+    Rake::Task[:update_ruby].invoke
   end
+end
+
+task :update_ruby do
+  sh "ruby-install ruby --no-reinstall --cleanup"
 end
 
 task install_git_freeze: %i[

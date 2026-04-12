@@ -42,8 +42,11 @@ class LocalGemInstaller
 
   def build_and_install
     Dir.chdir(path) do
+      sh "bundle install"
       sh "rake install"
     end
+  rescue RuntimeError => e
+    raise "#{name} failed to install. You may need to run `rake update_ruby` to install a newer Ruby version.\n#{e.message}"
   end
 
   def record_installed_commit
