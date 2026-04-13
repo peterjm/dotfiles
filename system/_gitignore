@@ -10,7 +10,9 @@
 # used by git-refresh
 .git-main-branch
 
-# used by related-files
+# for shared projects, we don't always want to include these
+# used by vim-projectionist and related-files
+.projections.json
 .related_files_mapping.json
 
 # used by test-that
