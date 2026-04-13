@@ -10,12 +10,13 @@ return {
     dependencies = { "williamboman/mason.nvim" },
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { "ruby_lsp", "lua_ls" },
+        ensure_installed = { "ruby_lsp", "lua_ls", "pyright" },
       })
 
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
       vim.lsp.config("ruby_lsp", { capabilities = capabilities })
+      vim.lsp.config("pyright", { capabilities = capabilities })
       vim.lsp.config("lua_ls", {
         capabilities = capabilities,
         settings = {
@@ -24,7 +25,7 @@ return {
           },
         },
       })
-      vim.lsp.enable({ "ruby_lsp", "lua_ls" })
+      vim.lsp.enable({ "ruby_lsp", "lua_ls", "pyright" })
 
       -- LSP keybindings (active when a language server attaches)
       vim.api.nvim_create_autocmd("LspAttach", {
