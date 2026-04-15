@@ -56,7 +56,7 @@ SYMLINK_FILES=()
 [ -f "$REPO_ROOT/.worktree-symlinks" ] && SYMLINK_FILES+=("$REPO_ROOT/.worktree-symlinks")
 
 if [ ${#SYMLINK_FILES[@]} -gt 0 ]; then
-  cat "${SYMLINK_FILES[@]}" | sed -e 's/#.*//' -e 's/[[:space:]]*$//' | awk 'NF && !seen[$0]++' | while read entry; do
+  cat "${SYMLINK_FILES[@]}" | sed -e 's/#.*//' -e 's:/*$::' -e 's/[[:space:]]*$//' | awk 'NF && !seen[$0]++' | while read entry; do
     src="$REPO_ROOT/$entry"
     dest="$WT_DIR/$entry"
     if [ -e "$src" ] && [ ! -e "$dest" ]; then
