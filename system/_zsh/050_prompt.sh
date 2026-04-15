@@ -13,13 +13,21 @@ GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_SHOWSTASHSTATE=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_STATESEPARATOR=''
-precmd () {
-  local git_status
-  git_status="$(__git_ps1 '%s')"
-  if [[ ! -z "$git_status" ]]; then
-    git-frozen && git_status+='~'
-    git_status="[$git_status]"
-  fi
 
-  PS1="$LAST_COMMAND_STATUS $PROMPT_COLOUR%B%2~%b$git_status %#%f "
+# Prompt segments. Override these in later-numbered _zsh/*.sh files to
+# customize the prompt without editing this file.
+prompt_path() {
+  echo '%2~'
+}
+
+prompt_git_info() {
+  local s
+  s=$(__git_ps1 '%s')
+  [[ -z "$s" ]] && return
+  git-frozen && s+='~'
+  echo "[$s]"
+}
+
+precmd () {
+  PS1="$LAST_COMMAND_STATUS $PROMPT_COLOUR%B$(prompt_path)%b$(prompt_git_info) %#%f "
 }
