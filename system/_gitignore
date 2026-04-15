@@ -31,6 +31,9 @@ ehthumbs.db
 *.swo
 .netrwhist
 
+# used by direnv to perform actions on switching to the directory
+.envrc
+
 .ai_brainstorm
 .claude
 
