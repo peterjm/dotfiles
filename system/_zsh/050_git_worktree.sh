@@ -59,3 +59,29 @@ git-wt-go() {
   echo "No worktree matching '$name' (see: git-wt-list)"
   return 1
 }
+
+# Completion: offer worktree dir names + their branches, plus the -c flag.
+# compinit runs in 050_completions.sh, which sorts before this file.
+_git-wt-go() {
+  (( CURRENT == 2 )) || return 0
+
+  local wt_base wt br
+  local -a candidates
+
+  wt_base=$(git-wt-base 2>/dev/null) || return 0
+  if [[ -d "$wt_base" ]]; then
+    for wt in "$wt_base"/*(N/); do
+      # Prefer the branch name (it's what the user thinks in); fall back to
+      # the dir name if we can't read HEAD or it's detached.
+      br=$(git -C "$wt" rev-parse --abbrev-ref HEAD 2>/dev/null)
+      if [[ -n "$br" && "$br" != "HEAD" ]]; then
+        candidates+=("$br")
+      else
+        candidates+=("${wt:t}")
+      fi
+    done
+  fi
+
+  _describe -t worktrees 'worktree' candidates
+}
+compdef _git-wt-go git-wt-go
