@@ -48,7 +48,7 @@ else
   BASE="$MAIN_BRANCH"
 fi
 
-git worktree add -b "$BRANCH" "$WT_DIR" "$BASE"
+git worktree add -b "$BRANCH" --no-track "$WT_DIR" "$BASE"
 
 # Build the symlink list: global ~/.worktree-symlinks then per-repo file, deduped.
 SYMLINK_FILES=()
