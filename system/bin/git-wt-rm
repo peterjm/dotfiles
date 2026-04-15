@@ -41,7 +41,9 @@ else
 fi
 
 if git show-ref --verify --quiet "refs/heads/$BRANCH"; then
-  if git-branch-merged "$BRANCH"; then
+  if [ "$FORCE" = "true" ]; then
+    git branch -D "$BRANCH"
+  elif git-branch-merged "$BRANCH"; then
     git branch -d "$BRANCH"
   fi
 fi

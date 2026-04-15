@@ -36,19 +36,9 @@ if git show-ref --verify --quiet "refs/heads/$BRANCH"; then
   exit 1
 fi
 
-# Best-effort fetch of latest main; tolerate offline/no-origin.
-git fetch origin "$MAIN_BRANCH" 2>/dev/null || true
-
 mkdir -p "$WT_BASE"
 
-# Prefer origin/main as the branch base; fall back to local main.
-if git show-ref --verify --quiet "refs/remotes/origin/$MAIN_BRANCH"; then
-  BASE="origin/$MAIN_BRANCH"
-else
-  BASE="$MAIN_BRANCH"
-fi
-
-git worktree add -b "$BRANCH" --no-track "$WT_DIR" "$BASE"
+git worktree add -b "$BRANCH" --no-track "$WT_DIR" "$MAIN_BRANCH"
 
 # Build the symlink list: global ~/.worktree-symlinks then per-repo file, deduped.
 SYMLINK_FILES=()
