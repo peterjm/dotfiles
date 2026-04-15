@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Prints the .worktrees directory path for the current repo.
+# Single source of truth for the worktree directory location.
+echo "$(git-repo-root)/.worktrees"

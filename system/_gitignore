@@ -36,3 +36,7 @@ ehthumbs.db
 
 # used by rex @ Artificial Agency
 experiment_results
+
+# git worktree tooling (git-wt-* scripts)
+.worktrees/
+.worktree-symlinks

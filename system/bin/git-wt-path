@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Usage: git-wt-path <branch>
+# Prints the worktree path that git-wt-new creates (or would create) for <branch>.
+# Slashes in the branch name become hyphens in the directory name:
+#   feat/foo  ->  <wt-base>/feat-foo
+#   bugfix    ->  <wt-base>/bugfix
+
+BRANCH=$1
+if [ -z "$BRANCH" ]; then
+  echo "Usage: git-wt-path <branch>" >&2
+  exit 2
+fi
+
+echo "$(git-wt-base)/${BRANCH//\//-}"

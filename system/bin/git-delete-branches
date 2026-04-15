@@ -3,14 +3,28 @@
 CURRENT_BRANCH=`git-current-branch`
 MAIN_BRANCH=`git-main-branch`
 
+list_branches() {
+  git for-each-ref --format='%(refname:short)' refs/heads/
+}
+
+delete_merged_branches() {
+  list_branches | while read branch; do
+    [ "$branch" = "$MAIN_BRANCH" ] && continue
+    [ "$branch" = "$CURRENT_BRANCH" ] && continue
+    if git-branch-merged "$branch"; then
+      git branch -d "$branch"
+    fi
+  done
+}
+
 if [ "$CURRENT_BRANCH" == "$MAIN_BRANCH" ]; then
   if [ "$1" == "--all" ]; then
-    git branch | grep -v "$MAIN_BRANCH" | xargs git branch -D
+    list_branches | grep -v "^${MAIN_BRANCH}$" | xargs git branch -D
   else
-    git branch --merged | grep -v "$MAIN_BRANCH" | xargs git branch -d
+    delete_merged_branches
   fi
 elif [ "$1" == "--force" ]; then
-  git branch --merged | grep -v "\*" | grep -v "$MAIN_BRANCH" | xargs git branch -d
+  delete_merged_branches
 else
   echo "Only runnable on $MAIN_BRANCH branch (use --force to override)"
 fi
