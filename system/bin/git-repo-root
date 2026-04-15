@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Prints the main (primary) working tree path. Safe to call from any worktree.
+# Use this instead of git-root when you need the canonical repo root regardless
+# of which worktree you are currently in.
+git worktree list --porcelain | head -1 | sed 's/^worktree //'

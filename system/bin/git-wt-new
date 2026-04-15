@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# Usage: git-wt-new <branch>
+# Creates a new branch from origin/main and a worktree at $(git-wt-base)/<wt-name>.
+# Branch names with slashes (e.g. feat/foo) become worktree dirs with hyphens (feat-foo).
+
+set -e
+
+BRANCH=$1
+if [ -z "$BRANCH" ]; then
+  echo "Usage: git-wt-new <branch>" >&2
+  exit 1
+fi
+
+# Loose validation: no spaces, no leading dash. Trust git for the rest.
+case "$BRANCH" in
+  -*|*" "*)
+    echo "Invalid branch name: '$BRANCH'" >&2
+    exit 1
+    ;;
+esac
+
+REPO_ROOT=$(git-repo-root)
+MAIN_BRANCH=$(git-main-branch)
+WT_BASE=$(git-wt-base)
+WT_DIR=$(git-wt-path "$BRANCH")
+WT_NAME=$(basename "$WT_DIR")
+
+if [ -e "$WT_DIR" ]; then
+  echo "Worktree path already exists: $WT_DIR" >&2
+  exit 1
+fi
+
+if git show-ref --verify --quiet "refs/heads/$BRANCH"; then
+  echo "Branch '$BRANCH' already exists; use a different name" >&2
+  exit 1
+fi
+
+# Best-effort fetch of latest main; tolerate offline/no-origin.
+git fetch origin "$MAIN_BRANCH" 2>/dev/null || true
+
+mkdir -p "$WT_BASE"
+
+# Prefer origin/main as the branch base; fall back to local main.
+if git show-ref --verify --quiet "refs/remotes/origin/$MAIN_BRANCH"; then
+  BASE="origin/$MAIN_BRANCH"
+else
+  BASE="$MAIN_BRANCH"
+fi
+
+git worktree add -b "$BRANCH" "$WT_DIR" "$BASE"
+
+# Build the symlink list: global ~/.worktree-symlinks then per-repo file, deduped.
+SYMLINK_FILES=()
+[ -f "$HOME/.worktree-symlinks" ] && SYMLINK_FILES+=("$HOME/.worktree-symlinks")
+[ -f "$REPO_ROOT/.worktree-symlinks" ] && SYMLINK_FILES+=("$REPO_ROOT/.worktree-symlinks")
+
+if [ ${#SYMLINK_FILES[@]} -gt 0 ]; then
+  cat "${SYMLINK_FILES[@]}" | sed -e 's/#.*//' -e 's/[[:space:]]*$//' | awk 'NF && !seen[$0]++' | while read entry; do
+    src="$REPO_ROOT/$entry"
+    dest="$WT_DIR/$entry"
+    if [ -e "$src" ] && [ ! -e "$dest" ]; then
+      mkdir -p "$(dirname "$dest")"
+      ln -s "$src" "$dest"
+    fi
+  done
+fi
+
+echo "Created worktree '$WT_NAME' (branch '$BRANCH') at $WT_DIR"

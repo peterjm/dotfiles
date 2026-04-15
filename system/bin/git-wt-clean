@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Removes all clean worktrees under $(git-wt-base). For each removed worktree,
+# also deletes its branch if merged into main.
+
+set -e
+
+WT_BASE=$(git-wt-base)
+
+if [ ! -d "$WT_BASE" ]; then
+  exit 0
+fi
+
+shopt -s nullglob
+for wt in "$WT_BASE"/*/; do
+  wt="${wt%/}"
+  name=$(basename "$wt")
+  branch=$(git -C "$wt" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
+
+  if [ -n "$(git -C "$wt" status --porcelain 2>/dev/null)" ]; then
+    echo "Skipping '$name' (dirty)"
+    continue
+  fi
+
+  if ! git worktree remove "$wt" 2>/dev/null; then
+    echo "Skipping '$name' (remove failed)"
+    continue
+  fi
+
+  if [ -n "$branch" ] && git show-ref --verify --quiet "refs/heads/$branch"; then
+    if git-branch-merged "$branch"; then
+      git branch -d "$branch"
+      echo "Removed '$name' (branch '$branch' deleted)"
+    else
+      echo "Removed '$name' (branch '$branch' kept; not merged)"
+    fi
+  else
+    echo "Removed '$name'"
+  fi
+done
+
+git worktree prune

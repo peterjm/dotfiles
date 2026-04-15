@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# Usage: git-wt-rm <wt-name> [--force]
+# Removes a worktree under $(git-wt-base). Deletes its branch if merged into main.
+
+set -e
+
+WT_NAME=
+FORCE=false
+for arg in "$@"; do
+  case "$arg" in
+    --force) FORCE=true ;;
+    -*) echo "Unknown option: $arg" >&2; exit 1 ;;
+    *) WT_NAME=$arg ;;
+  esac
+done
+
+if [ -z "$WT_NAME" ]; then
+  echo "Usage: git-wt-rm <wt-name> [--force]" >&2
+  exit 1
+fi
+
+WT_DIR="$(git-wt-base)/$WT_NAME"
+
+if [ ! -d "$WT_DIR" ]; then
+  echo "No worktree at $WT_DIR" >&2
+  exit 1
+fi
+
+BRANCH=$(git -C "$WT_DIR" rev-parse --abbrev-ref HEAD)
+
+if [ "$FORCE" != "true" ] && [ -n "$(git -C "$WT_DIR" status --porcelain)" ]; then
+  echo "Worktree '$WT_NAME' has uncommitted changes; use --force to remove anyway" >&2
+  exit 1
+fi
+
+if [ "$FORCE" = "true" ]; then
+  git worktree remove --force "$WT_DIR"
+else
+  git worktree remove "$WT_DIR"
+fi
+
+if git show-ref --verify --quiet "refs/heads/$BRANCH"; then
+  if git-branch-merged "$BRANCH"; then
+    git branch -d "$BRANCH"
+  fi
+fi
+
+git worktree prune
+echo "Removed worktree '$WT_NAME'"

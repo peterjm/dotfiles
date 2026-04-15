@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Usage: git-branch-merged <branch>
+# Exit 0 if <branch> is merged into the main branch, else 1.
+# Exit 2 on usage error.
+#
+# "Merged" means: the branch tip is reachable from the main branch tip.
+# Matches `git branch --merged main` semantics but is trivially parseable.
+
+BRANCH=$1
+if [ -z "$BRANCH" ]; then
+  echo "Usage: git-branch-merged <branch>" >&2
+  exit 2
+fi
+
+MAIN_BRANCH=`git-main-branch`
+git merge-base --is-ancestor "$BRANCH" "$MAIN_BRANCH" 2>/dev/null

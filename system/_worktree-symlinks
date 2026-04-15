@@ -1,0 +1,13 @@
+# Files and directories to symlink from the main working tree into a new
+# worktree. Used by git-wt-new. One path per line, relative to the repo root.
+# Blank lines and #-comments are ignored. Missing entries are silently skipped,
+# so this list can include files that don't exist in every repo.
+#
+# A per-repo .worktree-symlinks file (also globally gitignored) can add entries.
+
+.git-main-branch
+.projections.json
+.related_files_mapping.json
+.test_that.json
+.envrc
+.claude/
