@@ -10,7 +10,23 @@ fi
 
 if [ "$CURRENT_BRANCH" == "$BASE_BRANCH" ]; then
   git pull
-else
-  git fetch origin $BASE_BRANCH:$BASE_BRANCH
-  git rebase $BASE_BRANCH
+  exit 0
 fi
+
+# A branch can only be checked out in one worktree at a time, and git refuses
+# to fast-forward a ref that's claimed by an active working tree. So if the
+# main worktree has $BASE_BRANCH checked out, advance it from inside that
+# worktree instead of via a refspec fetch. If $BASE_BRANCH is checked out in
+# some other worktree, the refspec fetch below will fail — this is fine; it
+# should be a rare/accidental state and a loud error is the right response.
+MAIN_WT=$(git-repo-root)
+MAIN_WT_BRANCH=$(git -C "$MAIN_WT" rev-parse --abbrev-ref HEAD)
+
+if [ "$MAIN_WT_BRANCH" = "$BASE_BRANCH" ]; then
+  git fetch origin "$BASE_BRANCH"
+  git -C "$MAIN_WT" merge --ff-only "origin/$BASE_BRANCH"
+else
+  git fetch origin "$BASE_BRANCH:$BASE_BRANCH"
+fi
+
+git rebase "$BASE_BRANCH"
