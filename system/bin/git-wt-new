@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Usage: git-wt-new <branch>
-# Creates a new branch from origin/main and a worktree at $(git-wt-base)/<wt-name>.
+# Creates a new branch from HEAD and a worktree at $(git-wt-base)/<wt-name>.
 # Branch names with slashes (e.g. feat/foo) become worktree dirs with hyphens (feat-foo).
 
 set -e
@@ -21,7 +21,6 @@ case "$BRANCH" in
 esac
 
 REPO_ROOT=$(git-repo-root)
-MAIN_BRANCH=$(git-main-branch)
 WT_BASE=$(git-wt-base)
 WT_DIR=$(git-wt-path "$BRANCH")
 WT_NAME=$(basename "$WT_DIR")
@@ -38,7 +37,7 @@ fi
 
 mkdir -p "$WT_BASE"
 
-git worktree add -b "$BRANCH" --no-track "$WT_DIR" "$MAIN_BRANCH"
+git worktree add -b "$BRANCH" --no-track "$WT_DIR"
 
 # Build the symlink list: global ~/.worktree-symlinks then per-repo file, deduped.
 SYMLINK_FILES=()
