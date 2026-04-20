@@ -12,6 +12,9 @@ opt.list = true -- Show invisible characters (tabs, trailing spaces) per `listch
 -- Don't create .swp swap files (I'd rather rely on undo history + git).
 opt.swapfile = false
 
+-- Use the system clipboard for all yanks, deletes, and pastes.
+opt.clipboard = "unnamedplus"
+
 -- When splitting windows, open the new one on the right / below rather than the default left / above.
 opt.splitright = true
 opt.splitbelow = true
