@@ -55,15 +55,13 @@ if [ ${#SYMLINK_FILES[@]} -gt 0 ]; then
   done
 fi
 
-# Propagate direnv trust: if the main tree's .envrc is currently allowed,
-# allow the worktree's .envrc too. Keeps direnv's trust model intact — we
-# only copy the trust the user has already granted.
+# Pre-approve the worktree's .envrc. If you're creating a worktree in this
+# repo, you've already decided to trust its .envrc — no sense making direnv
+# ask again for what is typically a symlink to the main tree's file.
 if command -v direnv >/dev/null 2>&1 && [ -e "$WT_DIR/.envrc" ]; then
-  # direnv status prints "Found RC allowed 0" when the current .envrc is allowed
-  # (0 = allowed, 1 = blocked, 2 = denied in direnv's enum).
-  if (cd "$REPO_ROOT" && direnv status 2>/dev/null) | grep -q '^Found RC allowed 0$'; then
-    direnv allow "$WT_DIR/.envrc"
-  fi
+  # `direnv allow <path>` silently no-ops on a symlink; run it from inside
+  # the worktree instead, which resolves correctly.
+  (cd "$WT_DIR" && direnv allow)
 fi
 
 echo "Created worktree '$WT_NAME' (branch '$BRANCH') at $WT_DIR"
