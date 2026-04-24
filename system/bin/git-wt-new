@@ -31,13 +31,16 @@ if [ -e "$WT_DIR" ]; then
 fi
 
 if git show-ref --verify --quiet "refs/heads/$BRANCH"; then
-  echo "Branch '$BRANCH' already exists; use a different name" >&2
-  exit 1
+  BRANCH_EXISTS=1
 fi
 
 mkdir -p "$WT_BASE"
 
-git worktree add -b "$BRANCH" --no-track "$WT_DIR"
+if [ -n "$BRANCH_EXISTS" ]; then
+  git worktree add "$WT_DIR" "$BRANCH"
+else
+  git worktree add -b "$BRANCH" --no-track "$WT_DIR"
+fi
 
 # Build the symlink list: global ~/.worktree-symlinks then per-repo file, deduped.
 SYMLINK_FILES=()
