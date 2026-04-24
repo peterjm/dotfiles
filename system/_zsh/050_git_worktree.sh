@@ -85,3 +85,23 @@ _git-wt-go() {
   _describe -t worktrees 'worktree' candidates
 }
 compdef _git-wt-go git-wt-go
+
+# Completion for git-wt-rm: worktree dir names (not branches — git-wt-rm
+# resolves the arg as $(git-wt-base)/<name>), plus --force.
+_git-wt-rm() {
+  local wt_base
+  local -a candidates flags
+
+  wt_base=$(git-wt-base 2>/dev/null) || return 0
+  if [[ -d "$wt_base" ]]; then
+    local wt
+    for wt in "$wt_base"/*(N/); do
+      candidates+=("${wt:t}")
+    done
+  fi
+
+  _describe -t worktrees 'worktree' candidates
+  flags=('--force')
+  _describe -t options 'option' flags
+}
+compdef _git-wt-rm git-wt-rm
