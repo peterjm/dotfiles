@@ -1,8 +1,10 @@
 #!/bin/bash
 
 function has_arg () {
-  for arg in $2; do
-    if [ "$arg" == "$1" ]; then
+  local search=$1
+  shift
+  for arg in "$@"; do
+    if [ "$arg" == "$search" ]; then
       return 0
     fi
   done
@@ -12,11 +14,11 @@ function has_arg () {
 
 if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
   diff_filter=()
-  if has_arg "--no-deleted" $@; then
+  if has_arg "--no-deleted" "$@"; then
     diff_filter=(--diff-filter=d)
   fi
 
-  if has_arg "-b" $@ || has_arg "--include-branch-commits" $@; then
+  if has_arg "-b" "$@" || has_arg "--include-branch-commits" "$@"; then
     git diff --name-only "${diff_filter[@]}" $(git merge-base HEAD $(git-main-branch))
     git ls-files -o --exclude-standard
   else
