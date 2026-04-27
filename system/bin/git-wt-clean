@@ -37,7 +37,7 @@ for wt in "$WT_BASE"/*/; do
     continue
   fi
 
-  git branch -d "$branch"
+  git branch -d --quiet "$branch"
   echo "Removed '$name' (branch '$branch' deleted)"
 done
 
