@@ -11,11 +11,16 @@ function has_arg () {
 }
 
 if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+  diff_filter=()
+  if has_arg "--no-deleted" $@; then
+    diff_filter=(--diff-filter=d)
+  fi
+
   if has_arg "-b" $@ || has_arg "--include-branch-commits" $@; then
-    git diff --name-only $(git merge-base HEAD $(git-main-branch))
+    git diff --name-only "${diff_filter[@]}" $(git merge-base HEAD $(git-main-branch))
     git ls-files -o --exclude-standard
   else
-    git diff --name-only
+    git diff --name-only "${diff_filter[@]}"
     git ls-files -o --exclude-standard
   fi
 else
