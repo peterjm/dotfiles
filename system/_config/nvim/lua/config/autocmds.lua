@@ -17,11 +17,20 @@ vim.filetype.add({
   },
 })
 
--- Makefiles and Python require real tab characters — disable expandtab for those buffers only.
+-- Makefiles require real tab characters — disable expandtab for those buffers only.
 autocmd("FileType", {
-  pattern = { "make", "python" },
+  pattern = { "make" },
   callback = function()
     vim.opt_local.expandtab = false
+  end,
+})
+
+-- Python convention is 4-space indentation (PEP 8).
+autocmd("FileType", {
+  pattern = "python",
+  callback = function()
+    vim.opt_local.tabstop = 4
+    vim.opt_local.shiftwidth = 4
   end,
 })
 
